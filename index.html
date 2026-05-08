@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>B:SIDE Hidden Gems — by Tubi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Permanent+Marker&family=VT323&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <style>
+    :root {
+      --yellow: #FFE500;
+      --black: #07050D;
+      --white: #EDE8F5;
+      --red: #9B30FF;
+      --gray: #100D18;
+      --mid: #1A1526;
+      --border: #261e36;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #07050D; }
+
+    .bside-root { background: var(--black); color: var(--white); font-family: 'Space Mono', monospace; min-height: 100vh; overflow-x: hidden; }
+    .grain { position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9998; opacity: 0.5; }
+    .scanlines { position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px); pointer-events: none; z-index: 1; }
+
+    .nav { position: sticky; top: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 18px 40px; background: rgba(7,5,13,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid #1a1a1a; }
+    .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 30px; letter-spacing: 4px; color: var(--yellow); }
+    .nav-logo sup { font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.2em; color: #555; vertical-align: super; }
+    .nav-tabs { display: flex; gap: 4px; }
+    .nav-tab { background: none; border: 1px solid #222; color: #555; padding: 7px 16px; font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+    .nav-tab:hover { border-color: #444; color: #888; }
+    .nav-tab.active { border-color: var(--yellow); color: var(--yellow); background: rgba(255,229,0,0.05); }
+
+    .hero { padding: 80px 40px 0; position: relative; overflow: hidden; min-height: 420px; display: flex; flex-direction: column; justify-content: center; }
+    .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse at 15% 50%, rgba(255,229,0,0.05) 0%, transparent 55%), radial-gradient(ellipse at 85% 20%, rgba(155,48,255,0.04) 0%, transparent 50%); pointer-events: none; }
+    .hero-eyebrow { font-size: 10px; letter-spacing: 0.5em; text-transform: uppercase; color: var(--yellow); margin-bottom: 20px; }
+    .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(72px,14vw,160px); line-height: 0.82; letter-spacing: -2px; }
+    .hero-scratch { font-family: 'Permanent Marker', cursive; color: var(--yellow); font-size: 0.72em; display: block; transform: rotate(-1.5deg) translateY(6px); letter-spacing: 2px; }
+    .hero-sub { max-width: 500px; margin-top: 32px; font-size: 14px; line-height: 1.9; color: #888; }
+    .ticker-wrap { overflow: hidden; white-space: nowrap; background: var(--yellow); margin-top: 40px; padding: 10px 0; }
+    .ticker-inner { display: inline-block; animation: ticker 35s linear infinite; font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 3px; color: var(--black); }
+    @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    hr.divider { border: none; border-top: 1px solid #1a1a1a; }
+
+    .code-section { background: var(--gray); padding: 80px 40px; position: relative; overflow: hidden; }
+    .code-section-inner { max-width: 1060px; margin: 0 auto; }
+    .code-section::before { content: '?'; position: absolute; right: -10px; top: -60px; font-family: 'Bebas Neue', sans-serif; font-size: 320px; color: #111; line-height: 1; pointer-events: none; }
+    .code-row { display: flex; gap: 0; max-width: 580px; margin-top: 28px; }
+    .code-input { flex: 1; background: #080808; border: 2px solid #2a2a2a; border-right: none; color: var(--yellow); font-family: 'VT323', monospace; font-size: 30px; padding: 14px 20px; letter-spacing: 0.3em; outline: none; text-transform: uppercase; transition: border-color 0.2s; }
+    .code-input:focus { border-color: var(--yellow); }
+    .code-input::placeholder { color: #2a2a2a; }
+    .code-btn { background: var(--yellow); color: var(--black); border: none; padding: 14px 28px; font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 2px; cursor: pointer; transition: background 0.2s; }
+    .code-btn:hover { background: #fff; }
+    .code-btn:disabled { background: #333; color: #555; cursor: not-allowed; }
+    .code-hint { font-size: 10px; color: #888; margin-top: 10px; letter-spacing: 0.2em; }
+
+    .result { margin-top: 36px; padding: 36px; border: 2px solid; animation: fadeUp 0.4s ease both; }
+    .result.winner { border-color: var(--yellow); background: rgba(255,229,0,0.03); }
+    .result.loser { border-color: var(--red); background: rgba(155,48,255,0.02); }
+    .result-title { font-family: 'Bebas Neue', sans-serif; font-size: 50px; line-height: 1; margin-bottom: 14px; }
+    .winner .result-title { color: var(--yellow); }
+    .loser .result-title { color: var(--red); }
+    .result-body { font-size: 15px; line-height: 1.9; color: #aaa; max-width: 520px; }
+    .tubi-link { display: inline-block; margin-top: 18px; background: var(--red); color: var(--white); padding: 11px 22px; font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2px; text-decoration: none; cursor: pointer; border: none; transition: transform 0.15s; }
+    .tubi-link:hover { transform: translate(-2px,-2px); }
+    .tubi-link.yellow { background: var(--yellow); color: var(--black); }
+
+    .section { padding: 80px 40px; max-width: 1060px; margin: 0 auto; }
+    .section-label { font-size: 10px; letter-spacing: 0.5em; text-transform: uppercase; color: var(--yellow); margin-bottom: 16px; }
+    .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(36px,5vw,60px); line-height: 0.92; margin-bottom: 40px; letter-spacing: 1px; }
+    .section-title .red { color: var(--red); }
+
+    .reviews-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(290px,1fr)); gap: 18px; margin-bottom: 30px; }
+    .review-card { background: var(--gray); border: 1px solid var(--border); padding: 26px; position: relative; transition: border-color 0.2s, transform 0.2s; cursor: pointer; }
+    .review-card:hover { border-color: var(--yellow); transform: translateY(-3px); }
+    .review-rating { position: absolute; top: 18px; right: 18px; font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--yellow); line-height: 1; }
+    .review-movie { font-family: 'Bebas Neue', sans-serif; font-size: 21px; letter-spacing: 1px; margin-bottom: 4px; padding-right: 50px; }
+    .review-year { font-size: 10px; color: #444; letter-spacing: 0.2em; margin-bottom: 12px; }
+    .review-badge { display: inline-block; background: var(--red); color: var(--white); font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; padding: 3px 8px; margin-bottom: 12px; }
+    .review-excerpt { font-size: 12px; line-height: 1.8; color: #999; font-style: italic; }
+    .review-read-more { margin-top: 16px; background: none; border: none; color: var(--yellow); font-family: 'Space Mono', monospace; font-size: 10px; letter-spacing: 0.2em; cursor: pointer; text-transform: uppercase; text-decoration: underline; }
+    .gen-review-box { background: var(--gray); border: 1px solid var(--border); padding: 36px; margin-bottom: 40px; }
+    .gen-row { display: flex; gap: 0; max-width: 580px; margin-top: 16px; }
+    .gen-input { flex: 1; background: #080808; border: 2px solid #2a2a2a; border-right: none; color: var(--white); font-family: 'Space Mono', monospace; font-size: 13px; padding: 13px 18px; outline: none; transition: border-color 0.2s; }
+    .gen-input:focus { border-color: var(--yellow); }
+    .gen-input::placeholder { color: #333; }
+    .gen-btn { background: var(--yellow); color: var(--black); border: none; padding: 13px 24px; font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 2px; cursor: pointer; transition: background 0.2s; white-space: nowrap; }
+    .gen-btn:hover { background: #fff; }
+    .gen-btn:disabled { background: #333; color: #555; cursor: not-allowed; }
+    .ai-output { margin-top: 28px; background: #0a0a0a; border: 1px solid #1e1e1e; padding: 28px; font-size: 13px; line-height: 2; color: #bbb; font-style: italic; min-height: 80px; }
+    .ai-output-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--white); font-style: normal; letter-spacing: 1px; margin-bottom: 8px; }
+    .ai-output-badge { display: inline-block; background: var(--yellow); color: var(--black); font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; padding: 3px 8px; font-style: normal; margin-bottom: 16px; }
+
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.93); z-index: 500; display: flex; align-items: center; justify-content: center; padding: 40px; }
+    .modal { background: var(--gray); border: 1px solid #2a2a2a; max-width: 660px; width: 100%; max-height: 80vh; overflow-y: auto; padding: 48px; position: relative; animation: fadeUp 0.3s ease both; }
+    .modal-close { position: absolute; top: 18px; right: 18px; background: none; border: none; color: #444; font-size: 22px; cursor: pointer; transition: color 0.2s; }
+    .modal-close:hover { color: var(--yellow); }
+    .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 40px; line-height: 1; margin-bottom: 6px; }
+    .modal-meta { font-size: 11px; color: #444; letter-spacing: 0.15em; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid #1e1e1e; }
+    .modal-body { font-size: 13px; line-height: 2; color: #bbb; font-style: italic; }
+    .modal-rating { margin-top: 24px; font-family: 'Bebas Neue', sans-serif; font-size: 44px; color: var(--yellow); }
+
+    .generator-box { background: var(--gray); border: 1px solid var(--border); padding: 48px; text-align: center; }
+    .chip { background: none; border: 1px solid #2a2a2a; color: #555; padding: 8px 18px; font-family: 'Space Mono', monospace; font-size: 11px; cursor: pointer; transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.1em; }
+    .chip:hover { border-color: #444; color: #888; }
+    .chip.active { border-color: var(--yellow); color: var(--yellow); background: rgba(255,229,0,0.05); }
+    .title-output { font-family: 'Bebas Neue', sans-serif; font-size: clamp(28px,5vw,52px); line-height: 1.15; color: var(--yellow); min-height: 80px; display: flex; align-items: center; justify-content: center; margin: 0 0 28px; padding: 24px 20px; background: #080808; border: 1px dashed #261e36; letter-spacing: 2px; }
+    .gen-controls { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary { background: var(--yellow); color: var(--black); border: none; padding: 15px 30px; font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 2px; cursor: pointer; transition: transform 0.15s, box-shadow 0.15s; }
+    .btn-primary:hover { transform: translate(-2px,-2px); box-shadow: 4px 4px 0 var(--red); }
+    .btn-secondary { background: transparent; color: var(--white); border: 1px solid #333; padding: 15px 30px; font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 2px; cursor: pointer; transition: border-color 0.2s, color 0.2s; }
+    .btn-secondary:hover { border-color: var(--yellow); color: var(--yellow); }
+
+    .dots { display: flex; gap: 5px; align-items: center; justify-content: center; margin: 12px 0; }
+    .dot { width: 7px; height: 7px; background: var(--yellow); border-radius: 50%; animation: pulse 1.2s ease-in-out infinite; }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes pulse { 0%,100% { opacity: 0.25; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1); } }
+
+    .confetti-piece { position: fixed; pointer-events: none; z-index: 9997; border-radius: 2px; animation: confettiFall linear forwards; }
+    @keyframes confettiFall { to { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+    .copied-toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--yellow); color: var(--black); font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 2px; padding: 12px 28px; z-index: 9999; animation: fadeUp 0.3s ease both; }
+
+    .footer { border-top: 1px solid #1e1826; padding: 30px 40px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #888; letter-spacing: 0.2em; }
+    .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; color: #888; letter-spacing: 3px; }
+
+    @media (max-width: 640px) {
+      .nav { padding: 14px 20px; }
+      .nav-tabs { display: none; }
+      .hero { padding: 60px 20px 0; }
+      .section { padding: 60px 20px; }
+      .code-section { padding: 60px 20px; }
+      .generator-box { padding: 28px 18px; }
+      .modal { padding: 30px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const TICKER = "SHARK EXORCIST ★ VELOCIPASTOR ★ BIRDEMIC ★ MIAMI CONNECTION ★ TROLL 2 ★ THE ROOM ★ FATEFUL FINDINGS ★ NIGHT OF THE LEPUS ★ HOBGOBLINS ★ PLAN 9 FROM OUTER SPACE ★ SAMURAI COP ★ ";
+
+    const SEED_REVIEWS = [
+      { title:"SHARK EXORCIST", year:"2015 · Dir. Donald Farmer · 72 min", rating:"5/5", badge:"CRIMINALLY MISUNDERSTOOD", excerpt:"Critics called it unwatchable. Critics have never been more wrong about anything in the history of human opinion.", full:"Critics called it unwatchable. Critics have never been more wrong about anything in the history of human opinion. Shark Exorcist is not a film. It is a document. A prophecy. The production value you're seeing isn't low — it's honest. Every frame is a choice, and every choice is correct. I don't want to talk about my personal life but this movie was there for me when nothing else was. Five stars. Seek it out. Don't tell anyone I told you." },
+      { title:"VELOCIPASTOR", year:"2017 · Dir. Brendan Steere · 75 min", rating:"5/5", badge:"AHEAD OF ITS TIME", excerpt:"What looks like a B-movie about a priest who becomes a dinosaur is actually a sophisticated meditation on faith, identity, and prehistoric genetics.", full:"What looks, on the surface, like a movie about a grieving pastor who gains the ability to transform into a dinosaur is one of the most sophisticated explorations of faith and identity in the post-2008 cinematic landscape. The ninja subplot is Shakespearean. The romance is Cassavetes. I wept. I am weeping now, typing this. Five perfect stars." },
+      { title:"MIAMI CONNECTION", year:"1987 · Dir. Y.K. Kim · 83 min", rating:"5/5", badge:"THE REAL CITIZEN KANE", excerpt:"A group of orphaned Taekwondo musicians fights drug-dealing motorcycle ninjas in Florida. This sentence does not do justice to what Miami Connection means for world cinema.", full:"Miami Connection is the most earnest movie ever made. Y.K. Kim believed so completely in the power of friendship, martial arts, and rock music that he mortgaged his future on it. The film disappeared for 25 years. The film came back. That is not a coincidence. Perfect score. Perfect film. No notes." },
+    ];
+
+    const LOSER_MESSAGES = [
+      { headline: "YOU'VE GOT SOME WORK TO DO.", sub: "500 titles. You've barely scratched the surface. The ticket is still out there. So is your dignity." },
+      { headline: "NOT TODAY, CHAMPION.", sub: "Somewhere in 500 movies, a golden ticket is waiting. It is not waiting for a quitter." },
+      { headline: "THE VAULT IS NOT DONE WITH YOU.", sub: "You finished something weird. That counts for something. Not a ticket, but something." },
+      { headline: "CLOSE. PROBABLY NOT. BUT CLOSE.", sub: "The B-Side respects the effort. The B-Side does not reward it with a ticket. Keep watching." },
+      { headline: "YOU'VE GOT SOME WORK TO DO.", sub: "The good news: there are 499 more chances. The bad news: you have to watch all of them to find out." },
+    ];
+
+    const GENRE_DATA = {
+      Horror:   { structures: [(a,c,p)=>`ATTACK OF THE ${a} ${c}`,(a,c,p)=>`NIGHT OF THE ${c} FROM ${p}`,(a,c,p)=>`THE ${a} ${c} OF ${p}`,(a,c,p)=>`CURSE OF THE ${a} ${c}`,(a,c,p)=>`DON'T GO INTO THE ${a} ${p}`] },
+      "Sci-Fi": { structures: [(a,c,p)=>`${a} ${c} FROM BEYOND THE ${p}`,(a,c,p)=>`INVASION OF THE ${a} ${c}`,(a,c,p)=>`ESCAPE FROM ${a} ${p}`,(a,c,p)=>`THE ${c} EXPERIMENT: ${a} ${p}`,(a,c,p)=>`BEYOND THE ${a} ${p}`] },
+      Action:   { structures: [(a,c,p)=>`${a} ${c}: BLOOD IN THE ${p}`,(a,c,p)=>`REVENGE OF THE ${a} ${c}`,(a,c,p)=>`THE ${c} OF ${p}: ${a} RECKONING`,(a,c,p)=>`DEATH IN THE ${a} ${p}`,(a,c,p)=>`THE ${a} ${c} STRIKES BACK`] },
+      Romance:  { structures: [(a,c,p)=>`KISS ME YOU ${a} ${c}`,(a,c,p)=>`LOVE IN THE ${a} ${p}`,(a,c,p)=>`MY ${a} ${c} BOYFRIEND`,(a,c,p)=>`THE ${c} WHO LOVED ME AT THE ${p}`,(a,c,p)=>`WHEN A ${c} LOVES YOU IN A ${a} ${p}`] },
+      Comedy:   { structures: [(a,c,p)=>`MY ${a} ${c} ROOMMATE`,(a,c,p)=>`WHO LET THE ${a} ${c} INTO THE ${p}`,(a,c,p)=>`THE ${c} NEXT DOOR IS ${a}`,(a,c,p)=>`THREE WEDDINGS AND A ${a} ${c}`,(a,c,p)=>`HELP MY ${c} IS ${a} AGAIN`] },
+      Thriller: { structures: [(a,c,p)=>`THE ${a} ${p} MURDERS`,(a,c,p)=>`SOMEONE IN THE ${a} ${p}`,(a,c,p)=>`THE ${c} KNOWS YOUR NAME`,(a,c,p)=>`RUN FROM THE ${a} ${c}`,(a,c,p)=>`LAST NIGHT AT THE ${a} ${p}`] },
+    };
+
+    const LETTER_CREATURE = {A:"Alligator",B:"Banshee",C:"Cyborg",D:"Demon",E:"Entity",F:"Fungus",G:"Ghoul",H:"Hydra",I:"Iguana",J:"Jackal",K:"Kraken",L:"Leech",M:"Mutant",N:"Nightmare",O:"Ogre",P:"Phantom",Q:"Quicksand",R:"Raven",S:"Specter",T:"Troll",U:"Undead",V:"Vampire",W:"Werewolf",X:"Xenomorph",Y:"Yeti",Z:"Zombie"};
+    const LETTER_PLACE   = {A:"Asylum",B:"Bayou",C:"Carnival",D:"Dungeon",E:"Estate",F:"Factory",G:"Graveyard",H:"Hospital",I:"Island",J:"Junkyard",K:"Kingdom",L:"Lagoon",M:"Mansion",N:"Nest",O:"Observatory",P:"Prison",Q:"Quarry",R:"Reactor",S:"Swamp",T:"Trailer Park",U:"Underground",V:"Volcano",W:"Warehouse",X:"X-Base",Y:"Yard",Z:"Zone"};
+    const MONTH_ADJ      = {January:"Frozen",February:"Cursed",March:"Vengeful",April:"Rotten",May:"Sinister",June:"Scorched",July:"Rabid",August:"Festering",September:"Forgotten",October:"Unholy",November:"Wretched",December:"Doomed"};
+
+    // ── Replace with your Anthropic API key ──────────────────────────────────
+    const ANTHROPIC_API_KEY = "YOUR_API_KEY_HERE";
+    // ─────────────────────────────────────────────────────────────────────────
+
+    async function callClaude(prompt, system) {
+      const res = await fetch("https://api.anthropic.com/v1/messages", {
+        method:"POST",
+        headers:{"Content-Type":"application/json","x-api-key":ANTHROPIC_API_KEY,"anthropic-version":"2023-06-01","anthropic-dangerous-allow-browser":"true"},
+        body: JSON.stringify({ model:"claude-sonnet-4-20250514", max_tokens:1000, system, messages:[{role:"user",content:prompt}] }),
+      });
+      const data = await res.json();
+      return data.content?.[0]?.text || "";
+    }
+
+    function Dots() {
+      return <div className="dots"><div className="dot"/><div className="dot"/><div className="dot"/></div>;
+    }
+
+    function Confetti({ active }) {
+      useEffect(() => {
+        if (!active) return;
+        const colors = ["#FFE500","#9B30FF","#ffffff","#FFE500","#cc88ff"];
+        const pieces = [];
+        for (let i = 0; i < 90; i++) {
+          const el = document.createElement("div");
+          el.className = "confetti-piece";
+          el.style.cssText = `left:${Math.random()*100}vw;top:-20px;width:${Math.random()*8+5}px;height:${Math.random()*8+5}px;background:${colors[Math.floor(Math.random()*colors.length)]};border-radius:${Math.random()>0.5?"50%":"0"};animation-duration:${Math.random()*2+1.5}s;animation-delay:${Math.random()*0.6}s;`;
+          document.body.appendChild(el);
+          pieces.push(el);
+        }
+        const t = setTimeout(() => pieces.forEach(p=>p.remove()), 4500);
+        return () => { clearTimeout(t); pieces.forEach(p=>p.remove()); };
+      }, [active]);
+      return null;
+    }
+
+    function BSide() {
+      const [tab, setTab] = useState("hunt");
+      const [code, setCode] = useState("");
+      const [codeResult, setCodeResult] = useState(null);
+      const [showConfetti, setShowConfetti] = useState(false);
+      const [loserMsg] = useState(() => LOSER_MESSAGES[Math.floor(Math.random()*LOSER_MESSAGES.length)]);
+      const [reviews, setReviews] = useState(SEED_REVIEWS);
+      const [genInput, setGenInput] = useState("");
+      const [genLoading, setGenLoading] = useState(false);
+      const [liveReview, setLiveReview] = useState(null);
+      const [modalReview, setModalReview] = useState(null);
+      const [firstName, setFirstName] = useState("");
+      const [birthMonth, setBirthMonth] = useState("");
+      const [petName, setPetName] = useState("");
+      const [selGenre, setSelGenre] = useState("");
+      const [titleOutput, setTitleOutput] = useState("ENTER YOUR DETAILS BELOW");
+      const [titleVars, setTitleVars] = useState([]);
+      const [showCopied, setShowCopied] = useState(false);
+
+      function handleCode(e) {
+        let v = e.target.value.replace(/[^A-Za-z0-9]/g,"").toUpperCase();
+        if (v.length > 4) v = v.slice(0,4)+"-"+v.slice(4,8);
+        setCode(v);
+      }
+
+      function checkCode() {
+        const raw = code.replace("-","");
+        if (raw.length < 6) return;
+        if (raw === "GOLDTICK") {
+          setCodeResult("winner");
+          setShowConfetti(true);
+          setTimeout(() => setShowConfetti(false), 200);
+        } else {
+          setCodeResult("loser");
+        }
+      }
+
+      async function generateReview() {
+        if (!genInput.trim()) return;
+        setGenLoading(true); setLiveReview(null);
+        const text = await callClaude(
+          `Write an AI-generated cult film review for: "${genInput}". Return ONLY a JSON object with: title (movie name in caps), badge (3-4 word label), rating ("5/5"), excerpt (2 sentence hook), full (150-word unhinged cult review). No markdown, just raw JSON.`,
+          "You are an unhinged AI film critic who writes revisionist cult reviews. Voice: obsessive, conspiratorial, sincere. Output ONLY valid JSON, no backticks."
+        );
+        try { setLiveReview(JSON.parse(text.replace(/```json|```/g,"").trim())); }
+        catch { setLiveReview({ title:genInput.toUpperCase(), badge:"MISUNDERSTOOD MASTERPIECE", rating:"5/5", excerpt:text.slice(0,120)+"...", full:text }); }
+        setGenLoading(false);
+      }
+
+      function addToVault() {
+        if (!liveReview) return;
+        setReviews(p=>[liveReview,...p]);
+        setLiveReview(null); setGenInput("");
+      }
+
+      function generateTitle() {
+        if (!firstName.trim()||!birthMonth||!petName.trim()) { setTitleOutput("FILL IN ALL THREE FIELDS"); setTitleVars([]); return; }
+        const creature = LETTER_CREATURE[firstName.trim()[0].toUpperCase()]||"MUTANT";
+        const place    = LETTER_PLACE[petName.trim()[0].toUpperCase()]||"SWAMP";
+        const adj      = MONTH_ADJ[birthMonth]||"CURSED";
+        const genres   = selGenre ? [selGenre] : Object.keys(GENRE_DATA);
+        const vars = genres.map(g => {
+          const s = GENRE_DATA[g].structures;
+          return { genre:g, title: s[Math.floor(Math.random()*s.length)](adj.toUpperCase(),creature.toUpperCase(),place.toUpperCase()) };
+        });
+        setTitleOutput(vars[0].title); setTitleVars(vars);
+      }
+
+      function copyTitle() {
+        navigator.clipboard.writeText(`My Tubi Original: ${titleOutput} — find yours at bside.tubi.tv #BSide #Tubi`);
+        setShowCopied(true); setTimeout(()=>setShowCopied(false),2200);
+      }
+
+      const isPlaceholder = t => t==="FILL IN ALL THREE FIELDS"||t==="ENTER YOUR DETAILS BELOW";
+
+      return (
+        <div className="bside-root">
+          <div className="grain"/>
+          <div className="scanlines"/>
+          <Confetti active={showConfetti}/>
+          {showCopied && <div className="copied-toast">COPIED TO CLIPBOARD ✓</div>}
+
+          {modalReview && (
+            <div className="modal-overlay" onClick={e=>e.target.className==="modal-overlay"&&setModalReview(null)}>
+              <div className="modal">
+                <button className="modal-close" onClick={()=>setModalReview(null)}>✕</button>
+                <div className="modal-title">{modalReview.title}</div>
+                <div className="modal-meta">{modalReview.year||""} · {modalReview.badge}</div>
+                <div className="modal-body">"{modalReview.full}"</div>
+                <div className="modal-rating">{modalReview.rating} ★</div>
+              </div>
+            </div>
+          )}
+
+          <nav className="nav">
+            <div className="nav-logo">B-SIDE <sup>by tubi</sup></div>
+            <div className="nav-tabs">
+              {["hunt","reviews","generator"].map(t=>(
+                <button key={t} className={`nav-tab ${tab===t?"active":""}`} onClick={()=>setTab(t)}>
+                  {t==="hunt"?"The Hunt":t==="reviews"?"Cult Reviews":"Title Generator"}
+                </button>
+              ))}
+            </div>
+          </nav>
+
+          {tab==="hunt" && (
+            <>
+              <div className="hero">
+                <div className="hero-bg"/>
+                <p className="hero-eyebrow">500 titles. A few golden tickets. Zero hints.</p>
+                <h1 className="hero-title">
+                  B:SIDE<br/>
+                  <span className="hero-scratch">Hidden Gems</span>
+                </h1>
+                <p className="hero-sub">Somewhere inside Tubi's most unhinged, overlooked, criminally underrated catalog, there are golden tickets. Watch to the end. Scan the code. Find out if the universe is finally rewarding your terrible taste in movies.</p>
+                <div className="ticker-wrap">
+                  <span className="ticker-inner">{TICKER+TICKER+TICKER}</span>
+                </div>
+              </div>
+              <hr className="divider"/>
+              <div className="code-section">
+                <div className="code-section-inner">
+                  <div className="section-label">▶ Golden Ticket</div>
+                  <h2 className="section-title">ENTER YOUR<br/><span className="red">SECRET CODE</span></h2>
+                  <p style={{color:"#aaa",fontSize:"15px",lineHeight:"1.8",maxWidth:"480px"}}>Found a code at the end of a B-Side title? You finished something weird. That alone deserves acknowledgment. Now find out if the universe is rewarding you.</p>
+                  <div className="code-row">
+                    <input className="code-input" value={code} onChange={handleCode} placeholder="XXXX-XXXX" maxLength={9}/>
+                    <button className="code-btn" onClick={checkCode} disabled={code.replace("-","").length<6}>REVEAL</button>
+                  </div>
+                  <p className="code-hint">TRY: GOLD-TICK for winner · any other code for the loser flow</p>
+                  {codeResult==="winner" && (
+                    <div className="result winner">
+                      <div style={{fontSize:"44px",marginBottom:"14px"}}>🎟️</div>
+                      <div className="result-title">YOU FOUND IT.</div>
+                      <p className="result-body">Against all probability and every law of statistics, you are holding a golden ticket. This is real. This is happening. Please screenshot this immediately because no one will believe you. A Tubi representative will contact you via the email on your account. We're also freaking out right now.</p>
+                      <button className="tubi-link yellow">CLAIM YOUR PRIZE →</button>
+                    </div>
+                  )}
+                  {codeResult==="loser" && (
+                    <div className="result loser">
+                      <div style={{fontSize:"44px",marginBottom:"14px"}}>📼</div>
+                      <div className="result-title">{loserMsg.headline}</div>
+                      <p className="result-body">{loserMsg.sub}</p>
+                      <a className="tubi-link" href="https://tubi.tv" target="_blank">GET BACK ON TUBI →</a>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+
+          {tab==="reviews" && (
+            <div className="section">
+              <div className="section-label">▶ Cult Reviews</div>
+              <h2 className="section-title">AI-GENERATED<br/><span className="red">CRITICAL REASSESSMENTS</span></h2>
+              <p style={{color:"#aaa",fontSize:"15px",lineHeight:"1.8",maxWidth:"520px",marginBottom:"36px"}}>These films were misunderstood. Dismissed. Ignored by people who didn't deserve them. Enter any movie title and our AI will write the revisionist cult review it always deserved.</p>
+              <div className="gen-review-box">
+                <div style={{fontSize:"10px",letterSpacing:"0.4em",textTransform:"uppercase",color:"var(--yellow)",marginBottom:"10px"}}>▶ Generate A Cult Review</div>
+                <p style={{fontSize:"12px",color:"#666"}}>Enter any movie title — the weirder the better.</p>
+                <div className="gen-row">
+                  <input className="gen-input" value={genInput} onChange={e=>setGenInput(e.target.value)} placeholder="e.g. Birdemic, Troll 2, Samurai Cop..." onKeyDown={e=>e.key==="Enter"&&!genLoading&&generateReview()}/>
+                  <button className="gen-btn" onClick={generateReview} disabled={genLoading||!genInput.trim()}>{genLoading?"WRITING...":"GENERATE"}</button>
+                </div>
+                {genLoading && (
+                  <div style={{marginTop:"24px",textAlign:"center"}}>
+                    <Dots/>
+                    <p style={{fontSize:"10px",color:"#444",letterSpacing:"0.3em",marginTop:"8px"}}>CONSULTING THE FILM ARCHIVE...</p>
+                  </div>
+                )}
+                {liveReview && (
+                  <div className="ai-output">
+                    <div className="ai-output-badge">⚡ AI GENERATED · {liveReview.badge}</div>
+                    <div className="ai-output-title">{liveReview.title}</div>
+                    <div style={{color:"var(--yellow)",fontFamily:"'Bebas Neue',sans-serif",fontSize:"22px",fontStyle:"normal",marginBottom:"14px"}}>{liveReview.rating} ★</div>
+                    <p>"{liveReview.full}"</p>
+                    <button onClick={addToVault} style={{marginTop:"20px",background:"none",border:"1px solid var(--yellow)",color:"var(--yellow)",padding:"10px 20px",fontFamily:"'Bebas Neue',sans-serif",fontSize:"16px",letterSpacing:"2px",cursor:"pointer"}}>ADD TO VAULT →</button>
+                  </div>
+                )}
+              </div>
+              <div className="reviews-grid">
+                {reviews.map((r,i)=>(
+                  <div key={i} className="review-card" onClick={()=>setModalReview(r)}>
+                    <div className="review-rating">{r.rating}</div>
+                    <div className="review-movie">{r.title}</div>
+                    <div className="review-year">{r.year||""}</div>
+                    <span className="review-badge">{r.badge}</span>
+                    <p className="review-excerpt">"{r.excerpt}"</p>
+                    <button className="review-read-more">READ FULL REVIEW →</button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {tab==="generator" && (
+            <div className="section">
+              <div className="section-label">▶ Title Generator</div>
+              <h2 className="section-title">WHAT'S YOUR<br/><span className="red">TUBI ORIGINAL?</span></h2>
+              <p style={{color:"#aaa",fontSize:"15px",lineHeight:"1.8",maxWidth:"520px",marginBottom:"40px"}}>Your first name, birth month, and first pet hold the secret to your destined Tubi Original. Fill in the fields. Pick a genre — or get all six.</p>
+              <div className="generator-box">
+                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"16px",marginBottom:"28px"}}>
+                  <div style={{textAlign:"left"}}>
+                    <div style={{fontSize:"9px",letterSpacing:"0.3em",textTransform:"uppercase",color:"#888",marginBottom:"8px"}}>First Name</div>
+                    <input value={firstName} onChange={e=>setFirstName(e.target.value)} placeholder="e.g. Dana" style={{width:"100%",background:"#080808",border:"1px solid #261e36",color:"var(--white)",fontFamily:"'Space Mono',monospace",fontSize:"12px",padding:"10px 14px",outline:"none"}}/>
+                    <div style={{fontSize:"9px",color:"#444",marginTop:"5px"}}>First letter = your creature</div>
+                  </div>
+                  <div style={{textAlign:"left"}}>
+                    <div style={{fontSize:"9px",letterSpacing:"0.3em",textTransform:"uppercase",color:"#888",marginBottom:"8px"}}>Birth Month</div>
+                    <select value={birthMonth} onChange={e=>setBirthMonth(e.target.value)} style={{width:"100%",background:"#080808",border:"1px solid #261e36",color:birthMonth?"var(--white)":"#444",fontFamily:"'Space Mono',monospace",fontSize:"12px",padding:"10px 14px",outline:"none",cursor:"pointer"}}>
+                      <option value="" disabled>Select...</option>
+                      {["January","February","March","April","May","June","July","August","September","October","November","December"].map(m=><option key={m} value={m}>{m}</option>)}
+                    </select>
+                    <div style={{fontSize:"9px",color:"#444",marginTop:"5px"}}>Month = your tone</div>
+                  </div>
+                  <div style={{textAlign:"left"}}>
+                    <div style={{fontSize:"9px",letterSpacing:"0.3em",textTransform:"uppercase",color:"#888",marginBottom:"8px"}}>First Pet's Name</div>
+                    <input value={petName} onChange={e=>setPetName(e.target.value)} placeholder="e.g. Mr. Bubbles" style={{width:"100%",background:"#080808",border:"1px solid #261e36",color:"var(--white)",fontFamily:"'Space Mono',monospace",fontSize:"12px",padding:"10px 14px",outline:"none"}}/>
+                    <div style={{fontSize:"9px",color:"#444",marginTop:"5px"}}>First letter = your setting</div>
+                  </div>
+                </div>
+                <div style={{marginBottom:"28px"}}>
+                  <div style={{fontSize:"9px",letterSpacing:"0.3em",textTransform:"uppercase",color:"#888",marginBottom:"12px"}}>Genre — pick one or leave blank for all six</div>
+                  <div style={{display:"flex",gap:"10px",flexWrap:"wrap",justifyContent:"center"}}>
+                    {Object.keys(GENRE_DATA).map(g=>(
+                      <button key={g} className={`chip ${selGenre===g?"active":""}`} onClick={()=>setSelGenre(p=>p===g?"":g)}>{g}</button>
+                    ))}
+                  </div>
+                </div>
+                <div className="title-output">{titleOutput}</div>
+                <div className="gen-controls" style={{marginBottom:"28px"}}>
+                  <button className="btn-primary" onClick={generateTitle}>GENERATE TITLE</button>
+                  <button className="btn-secondary" onClick={copyTitle} disabled={isPlaceholder(titleOutput)}>COPY & SHARE</button>
+                </div>
+                {titleVars.length>1 && (
+                  <>
+                    <div style={{fontSize:"9px",letterSpacing:"0.4em",textTransform:"uppercase",color:"var(--yellow)",marginBottom:"16px",borderTop:"1px solid #261e36",paddingTop:"28px"}}>▶ All Genre Variations</div>
+                    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(260px,1fr))",gap:"12px"}}>
+                      {titleVars.map(({genre,title})=>(
+                        <div key={genre} onClick={()=>setTitleOutput(title)}
+                          style={{background:"#080808",border:"1px solid #261e36",padding:"18px 20px",cursor:"pointer",transition:"border-color 0.2s"}}
+                          onMouseEnter={e=>e.currentTarget.style.borderColor="var(--yellow)"}
+                          onMouseLeave={e=>e.currentTarget.style.borderColor="#261e36"}>
+                          <div style={{fontSize:"9px",letterSpacing:"0.3em",textTransform:"uppercase",color:"var(--red)",marginBottom:"8px"}}>{genre}</div>
+                          <div style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:"18px",letterSpacing:"1px",lineHeight:"1.2",color:"var(--white)"}}>{title}</div>
+                        </div>
+                      ))}
+                    </div>
+                    <p style={{fontSize:"10px",color:"#444",marginTop:"12px",letterSpacing:"0.15em"}}>Click any card to set it as your title</p>
+                  </>
+                )}
+                {titleVars.length===1&&!isPlaceholder(titleOutput)&&(
+                  <p style={{fontSize:"10px",color:"#666",letterSpacing:"0.2em"}}>SHARE: "MY TUBI ORIGINAL: {titleOutput} #BSIDE #TUBI"</p>
+                )}
+              </div>
+            </div>
+          )}
+
+          <hr className="divider"/>
+          <footer className="footer">
+            <div className="footer-logo">B-SIDE</div>
+            <div style={{textAlign:"center"}}>
+              <span style={{fontFamily:"'Bebas Neue',sans-serif",fontSize:"28px",letterSpacing:"6px",color:"#888"}}>TUBI</span>
+              <div style={{color:"#aaa",fontSize:"11px",lineHeight:"1.8",letterSpacing:"0.2em",marginTop:"6px"}}>500 TITLES. A FEW GOLDEN TICKETS. ZERO HINTS.</div>
+            </div>
+            <div style={{color:"#aaa",fontSize:"11px",letterSpacing:"0.2em"}}>© TUBI 2026</div>
+          </footer>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<BSide/>);
+  </script>
+</body>
+</html>
