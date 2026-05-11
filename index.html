@@ -22,19 +22,16 @@
   <style>
     :root { --yellow: #FFE500; --black: #07050D; --white: #EDE8F5; --red: #9B30FF; --gray: #100D18; --border: #261e36; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #07050D; display: flex; justify-content: center; overflow-x: hidden; }
-    .root { background: var(--black); color: var(--white); font-family: 'Space Mono', monospace; width: 100%; max-width: 390px; min-height: 844px; overflow-x: hidden; position: relative; }
+    body { background: #07050D; overflow-x: hidden; }
+    .root { background: var(--black); color: var(--white); font-family: 'Space Mono', monospace; width: 100%; min-height: 100vh; overflow-x: hidden; position: relative; }
+    .container { max-width: 1280px; margin: 0 auto; width: 100%; }
     .grain { position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9998; opacity: 0.5; }
-    .nav { position: sticky; top: 0; z-index: 100; background: rgba(7,5,13,0.97); backdrop-filter: blur(12px); border-bottom: 1px solid #1a1a1a; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+    .nav { position: sticky; top: 0; z-index: 100; background: rgba(7,5,13,0.97); backdrop-filter: blur(12px); border-bottom: 1px solid #1a1a1a; padding: 14px 20px; display: flex; flex-direction: column; gap: 10px; }
     .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 4px; color: var(--yellow); }
     .nav-logo sup { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.2em; color: #555; vertical-align: super; }
-    .nav-tabs { display: flex; gap: 6px; flex-wrap: wrap; overflow-x: auto; padding-bottom: 2px; -webkit-overflow-scrolling: touch; }
+    .nav-tabs { display: flex; gap: 4px; overflow-x: auto; padding-bottom: 2px; }
     .nav-tabs::-webkit-scrollbar { display: none; }
-    .nav-tab { background: none; border: 1px solid #222; color: #555; padding: 6px 10px; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; white-space: nowrap; transition: all 0.2s; flex: 0 0 auto; }
-    @media (max-width: 380px) {
-      .nav { padding: 14px 12px; }
-      .nav-tab { padding: 6px 8px; font-size: 8.5px; letter-spacing: 0.08em; }
-    }
+    .nav-tab { background: none; border: 1px solid #222; color: #555; padding: 6px 12px; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; white-space: nowrap; transition: all 0.2s; flex-shrink: 0; }
     .nav-tab:hover { border-color: #444; color: #888; }
     .nav-tab.active { border-color: var(--yellow); color: var(--yellow); background: rgba(255,229,0,0.05); }
     .hero { padding: 48px 20px 0; position: relative; overflow: hidden; min-height: 360px; display: flex; flex-direction: column; justify-content: center; }
@@ -120,6 +117,78 @@
     .copied-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--yellow); color: var(--black); font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2px; padding: 12px 24px; z-index: 9999; text-align: center; }
     .footer { border-top: 1px solid #1e1826; padding: 24px 20px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
     .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: #888; letter-spacing: 3px; }
+
+    /* ============ TABLET BREAKPOINT (640px+) ============ */
+    @media (min-width: 640px) {
+      .nav { padding: 18px 32px; flex-direction: row; align-items: center; justify-content: space-between; gap: 20px; }
+      .nav-logo { font-size: 30px; }
+      .nav-tabs { flex-wrap: nowrap; gap: 6px; padding-bottom: 0; }
+      .nav-tab { padding: 8px 14px; font-size: 10px; letter-spacing: 0.18em; }
+
+      .hero { padding: 80px 40px 0; min-height: 480px; }
+      .hero-eyebrow { font-size: 11px; }
+      .hero-sub { max-width: 520px; font-size: 14px; }
+
+      .code-section { padding: 80px 40px; }
+      .code-section-inner { max-width: 640px; margin: 0 auto; }
+
+      .section { padding: 80px 40px; }
+      .section-inner { max-width: 900px; margin: 0 auto; }
+
+      .reviews-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+
+      .gen-review-box { padding: 32px; }
+      .generator-box { padding: 36px 32px; }
+      .gen-fields-row { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 16px !important; flex-direction: row !important; }
+
+      .modal-overlay { align-items: center; }
+      .modal { max-width: 600px; padding: 40px 36px; }
+      .modal-title { font-size: 44px; }
+
+      .footer { flex-direction: row; justify-content: center; gap: 28px; padding: 32px 40px; }
+    }
+
+    /* ============ DESKTOP BREAKPOINT (1024px+) ============ */
+    @media (min-width: 1024px) {
+      .nav { padding: 22px 60px; }
+      .nav-logo { font-size: 36px; letter-spacing: 5px; }
+      .nav-tab { padding: 10px 18px; font-size: 11px; }
+
+      .hero { padding: 120px 60px 20px; min-height: 600px; }
+      .hero-eyebrow { font-size: 12px; margin-bottom: 20px; }
+      .hero-title { font-size: clamp(120px, 14vw, 200px) !important; }
+      .hero-sub { font-size: 16px; max-width: 640px; margin-top: 32px; }
+      .hero-inner { max-width: 1280px; margin: 0 auto; width: 100%; }
+      .ticker-inner { font-size: 16px; letter-spacing: 4px; }
+
+      .code-section { padding: 100px 60px; }
+      .code-section-inner { max-width: 720px; }
+      .section-title { font-size: clamp(48px, 6vw, 80px) !important; }
+      .code-input { font-size: 32px; padding: 16px 20px; }
+      .code-btn { font-size: 22px; padding: 16px 28px; }
+
+      .section { padding: 100px 60px; }
+      .section-inner { max-width: 1200px; }
+
+      .reviews-grid { grid-template-columns: repeat(3, 1fr); gap: 22px; }
+      .review-card { padding: 26px; }
+      .review-movie { font-size: 24px; }
+
+      .gen-review-box, .generator-box { max-width: 900px; margin-left: auto; margin-right: auto; }
+      .gen-input { font-size: 14px; padding: 14px 16px; }
+      .gen-btn { font-size: 17px; padding: 14px 22px; }
+
+      .title-output { font-size: clamp(36px, 5vw, 56px) !important; min-height: 110px; }
+
+      .modal { max-width: 720px; padding: 48px 48px; }
+      .modal-title { font-size: 56px; }
+      .modal-body { font-size: 14px; }
+    }
+
+    /* ============ MERCH/PRIZE PAGE RESPONSIVE ============ */
+    @media (min-width: 640px) {
+      .merch-wrap { max-width: 600px; margin: 0 auto; }
+    }
   </style>
 </head>
 <body>
@@ -317,37 +386,42 @@
         tab==="hunt" && React.createElement('div', null,
           React.createElement('div', {className:"hero"},
             React.createElement('div', {className:"hero-bg"}),
-            React.createElement('p', {className:"hero-eyebrow"}, "300 titles. Three days. One wild ride."),
-            React.createElement('h1', {className:"hero-title"}, "B:SIDE", React.createElement('br'), React.createElement('span', {className:"hero-scratch"}, "Hidden Gems")),
-            React.createElement('p', {className:"hero-sub"}, "Somewhere inside Tubi's most unhinged, overlooked catalog, there are prizes. Watch to the end. Scan the code. Find out if the universe is rewarding your terrible taste in movies."),
+            React.createElement('div', {className:"hero-inner"},
+              React.createElement('p', {className:"hero-eyebrow"}, "300 titles. Three days. One wild ride."),
+              React.createElement('h1', {className:"hero-title"}, "B:SIDE", React.createElement('br'), React.createElement('span', {className:"hero-scratch"}, "Hidden Gems")),
+              React.createElement('p', {className:"hero-sub"}, "Somewhere inside Tubi's most unhinged, overlooked catalog, there are prizes. Watch to the end. Scan the code. Find out if the universe is rewarding your terrible taste in movies.")
+            ),
             React.createElement('div', {className:"ticker-wrap"}, React.createElement('span', {className:"ticker-inner"}, TICKER+TICKER+TICKER))
           ),
           React.createElement('hr', {className:"divider"}),
           React.createElement('div', {className:"code-section"},
-            React.createElement('div', {className:"section-label"}, "▶ Enter Your Code"),
-            React.createElement('h2', {className:"section-title"}, "ENTER YOUR", React.createElement('br'), React.createElement('span', {className:"red"}, "SECRET CODE")),
-            React.createElement('p', {style:{color:"#aaa",fontSize:"13px",lineHeight:"1.8",marginBottom:"4px"}}, "Found a code at the end of a B-Side title? Find out if the universe is rewarding you."),
-            React.createElement('div', {className:"code-row"},
-              React.createElement('input', {className:"code-input", value:code, onChange:handleCode, placeholder:"XXXX-XXXX", maxLength:9}),
-              React.createElement('button', {className:"code-btn", onClick:checkCode, disabled:code.replace("-","").length<6}, "REVEAL")
-            ),
-            React.createElement('p', {className:"code-hint"}, "TRY: 123-456 for winner · anything else for loser"),
-            codeResult==="winner" && React.createElement('div', {className:"result winner"},
-              React.createElement('div', {style:{fontSize:"36px",marginBottom:"10px"}}, "🎟️"),
-              React.createElement('div', {className:"result-headline", style:{color:"var(--yellow)"}}, "YOU WON!"),
-              React.createElement('p', {className:"result-body"}, "Head to the Prize Palace and claim your prize."),
-              React.createElement('button', {className:"btn-yellow", onClick:()=>setTab("merch")}, "TAKE ME TO PRIZE PALACE →")
-            ),
-            codeResult==="loser" && React.createElement('div', {className:"result loser"},
-              React.createElement('div', {style:{fontSize:"36px",marginBottom:"10px"}}, "📼"),
-              React.createElement('div', {className:"result-headline", style:{color:"var(--red)"}}, loserMsg.headline),
-              React.createElement('p', {className:"result-body"}, loserMsg.sub),
-              React.createElement('a', {className:"btn-purple", href:"https://tubi.tv", target:"_blank"}, "GET BACK ON TUBI →")
+            React.createElement('div', {className:"code-section-inner"},
+              React.createElement('div', {className:"section-label"}, "▶ Enter Your Code"),
+              React.createElement('h2', {className:"section-title"}, "ENTER YOUR", React.createElement('br'), React.createElement('span', {className:"red"}, "SECRET CODE")),
+              React.createElement('p', {style:{color:"#aaa",fontSize:"13px",lineHeight:"1.8",marginBottom:"4px"}}, "Found a code at the end of a B-Side title? Find out if the universe is rewarding you."),
+              React.createElement('div', {className:"code-row"},
+                React.createElement('input', {className:"code-input", value:code, onChange:handleCode, placeholder:"XXXX-XXXX", maxLength:9}),
+                React.createElement('button', {className:"code-btn", onClick:checkCode, disabled:code.replace("-","").length<6}, "REVEAL")
+              ),
+              React.createElement('p', {className:"code-hint"}, "TRY: 123-456 for winner · anything else for loser"),
+              codeResult==="winner" && React.createElement('div', {className:"result winner"},
+                React.createElement('div', {style:{fontSize:"36px",marginBottom:"10px"}}, "🎟️"),
+                React.createElement('div', {className:"result-headline", style:{color:"var(--yellow)"}}, "YOU WON!"),
+                React.createElement('p', {className:"result-body"}, "Head to the Prize Palace and claim your prize."),
+                React.createElement('button', {className:"btn-yellow", onClick:()=>setTab("merch")}, "TAKE ME TO PRIZE PALACE →")
+              ),
+              codeResult==="loser" && React.createElement('div', {className:"result loser"},
+                React.createElement('div', {style:{fontSize:"36px",marginBottom:"10px"}}, "📼"),
+                React.createElement('div', {className:"result-headline", style:{color:"var(--red)"}}, loserMsg.headline),
+                React.createElement('p', {className:"result-body"}, loserMsg.sub),
+                React.createElement('a', {className:"btn-purple", href:"https://tubi.tv", target:"_blank"}, "GET BACK ON TUBI →")
+              )
             )
           )
         ),
 
         tab==="reviews" && React.createElement('div', {className:"section"},
+          React.createElement('div', {className:"section-inner"},
           React.createElement('div', {className:"section-label"}, "▶ Cult Reviews"),
           React.createElement('h2', {className:"section-title"}, "AI-GENERATED", React.createElement('br'), React.createElement('span', {className:"red"}, "REASSESSMENTS")),
           React.createElement('p', {style:{color:"#aaa",fontSize:"13px",lineHeight:"1.8",marginBottom:"24px"}}, "These films were misunderstood. Enter any title and our AI writes the revisionist cult review it always deserved."),
@@ -377,14 +451,16 @@
               React.createElement('button', {className:"review-read-more"}, "READ MORE →")
             ))
           )
+          )
         ),
 
         tab==="generator" && React.createElement('div', {className:"section"},
+          React.createElement('div', {className:"section-inner"},
           React.createElement('div', {className:"section-label"}, "▶ Title Generator"),
           React.createElement('h2', {className:"section-title"}, "WHAT'S YOUR", React.createElement('br'), React.createElement('span', {className:"red"}, "TUBI ORIGINAL?")),
           React.createElement('p', {style:{color:"#aaa",fontSize:"13px",lineHeight:"1.8",marginBottom:"24px"}}, "Your first name, birth month, and first pet hold the secret to your destined Tubi Original."),
           React.createElement('div', {className:"generator-box"},
-            React.createElement('div', {style:{display:"flex",flexDirection:"column",gap:"14px",marginBottom:"20px"}},
+            React.createElement('div', {className:"gen-fields-row", style:{display:"flex",flexDirection:"column",gap:"14px",marginBottom:"20px"}},
               React.createElement('div', {style:{textAlign:"left"}},
                 React.createElement('div', {style:{fontSize:"8px",letterSpacing:"0.3em",textTransform:"uppercase",color:"#888",marginBottom:"6px"}}, "First Name"),
                 React.createElement('input', {value:firstName, onChange:e=>setFirstName(e.target.value), placeholder:"e.g. Dana", style:{width:"100%",background:"#080808",border:"1px solid #261e36",color:"var(--white)",fontFamily:"'Space Mono',monospace",fontSize:"12px",padding:"9px 12px",outline:"none"}}),
@@ -426,9 +502,10 @@
             ),
             !isPlaceholder(titleOutput) && React.createElement(SocialShare, {text:"My Tubi Original: "+titleOutput+" #BSide #Tubi #WeirdMovies"})
           )
+          )
         ),
 
-        tab==="merch" && React.createElement('div', {style:{width:"100%",position:"relative"}},
+        tab==="merch" && React.createElement('div', {className:"merch-wrap", style:{width:"100%",position:"relative"}},
           React.createElement('img', {src:"./bside-poster.jpg", style:{width:"100%",display:"block"}, alt:"B:Side Prize Palace"}),
           showPrizePopup && React.createElement('div', {className:"prize-popup"},
             React.createElement('button', {className:"prize-popup-close", onClick:()=>setShowPrizePopup(false)}, "✕"),
