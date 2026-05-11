@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+  <title>B:SIDE Hidden Gems — by Tubi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Permanent+Marker&family=VT323&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <script>
+    window.addEventListener('load', function() {
+      var scripts = document.querySelectorAll('script[type="text/babel"]');
+      scripts.forEach(function(script) {
+        try {
+          var code = Babel.transform(script.innerHTML, { presets: ['react'] }).code;
+          eval(code);
+        } catch(e) { console.error('Babel error:', e); }
+      });
+    });
+  </script>
+  <style>
+    :root { --yellow: #FFE500; --black: #07050D; --white: #EDE8F5; --red: #9B30FF; --gray: #100D18; --border: #261e36; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #07050D; overflow-x: hidden; }
+    .root { background: var(--black); color: var(--white); font-family: 'Space Mono', monospace; width: 100%; min-height: 100vh; overflow-x: hidden; position: relative; }
+    .grain { position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9998; opacity: 0.5; }
+    .nav { position: sticky; top: 0; z-index: 100; background: rgba(7,5,13,0.97); backdrop-filter: blur(12px); border-bottom: 1px solid #1a1a1a; padding: 14px 20px; display: flex; flex-direction: column; gap: 10px; }
+    .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 4px; color: var(--yellow); }
+    .nav-logo sup { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.2em; color: #555; vertical-align: super; }
+    .nav-tabs { display: flex; gap: 4px; overflow-x: auto; padding-bottom: 2px; }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+    .nav-tab { background: none; border: 1px solid #222; color: #555; padding: 6px 12px; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; white-space: nowrap; transition: all 0.2s; flex-shrink: 0; }
+    .nav-tab:hover { border-color: #444; color: #888; }
+    .nav-tab.active { border-color: var(--yellow); color: var(--yellow); background: rgba(255,229,0,0.05); }
+    .hero { padding: 48px 20px 0; position: relative; overflow: hidden; min-height: 360px; display: flex; flex-direction: column; justify-content: center; }
+    .hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse at 15% 50%, rgba(255,229,0,0.06) 0%, transparent 55%), radial-gradient(ellipse at 85% 20%, rgba(155,48,255,0.05) 0%, transparent 50%); pointer-events: none; }
+    .hero-eyebrow { font-size: 9px; letter-spacing: 0.4em; text-transform: uppercase; color: var(--yellow); margin-bottom: 14px; }
+    .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(64px,20vw,96px); line-height: 0.82; letter-spacing: -2px; }
+    .hero-scratch { font-family: 'Permanent Marker', cursive; color: var(--yellow); font-size: 0.72em; display: block; transform: rotate(-1.5deg) translateY(6px); letter-spacing: 2px; }
+    .hero-sub { max-width: 100%; margin-top: 24px; font-size: 12px; line-height: 1.9; color: #888; }
+    .ticker-wrap { overflow: hidden; white-space: nowrap; background: var(--yellow); margin-top: 32px; padding: 8px 0; }
+    .ticker-inner { display: inline-block; animation: ticker 28s linear infinite; font-family: 'Bebas Neue', sans-serif; font-size: 12px; letter-spacing: 3px; color: var(--black); }
+    @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    hr.divider { border: none; border-top: 1px solid #1a1a1a; }
+    .code-section { background: var(--gray); padding: 48px 20px; position: relative; overflow: hidden; }
+    .code-section::before { content: '?'; position: absolute; right: -20px; top: -40px; font-family: 'Bebas Neue', sans-serif; font-size: 200px; color: #111; line-height: 1; pointer-events: none; }
+    .section-label { font-size: 9px; letter-spacing: 0.4em; text-transform: uppercase; color: var(--yellow); margin-bottom: 12px; }
+    .section-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(32px,9vw,48px); line-height: 0.92; margin-bottom: 20px; letter-spacing: 1px; }
+    .section-title .red { color: var(--red); }
+    .code-row { display: flex; gap: 0; margin-top: 20px; }
+    .code-input { flex: 1; background: #080808; border: 2px solid #2a2a2a; border-right: none; color: var(--yellow); font-family: 'VT323', monospace; font-size: 26px; padding: 12px 16px; letter-spacing: 0.3em; outline: none; text-transform: uppercase; transition: border-color 0.2s; min-width: 0; }
+    .code-input:focus { border-color: var(--yellow); }
+    .code-input::placeholder { color: #2a2a2a; }
+    .code-btn { background: var(--yellow); color: var(--black); border: none; padding: 12px 18px; font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 2px; cursor: pointer; white-space: nowrap; }
+    .code-btn:disabled { background: #333; color: #555; cursor: not-allowed; }
+    .code-hint { font-size: 9px; color: #888; margin-top: 8px; letter-spacing: 0.15em; }
+    .result { margin-top: 24px; padding: 24px; border: 2px solid; animation: fadeUp 0.4s ease both; }
+    .result.winner { border-color: var(--yellow); background: rgba(255,229,0,0.03); }
+    .result.loser { border-color: var(--red); background: rgba(155,48,255,0.02); }
+    .result-headline { font-family: 'Bebas Neue', sans-serif; font-size: 40px; line-height: 1; margin-bottom: 10px; }
+    .result-body { font-size: 14px; line-height: 1.8; color: #aaa; margin-bottom: 16px; }
+    .btn-yellow { display: inline-block; background: var(--yellow); color: var(--black); padding: 12px 20px; font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 2px; border: none; cursor: pointer; transition: transform 0.15s; text-decoration: none; }
+    .btn-purple { display: inline-block; background: var(--red); color: var(--white); padding: 12px 20px; font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 2px; border: none; cursor: pointer; transition: transform 0.15s; text-decoration: none; }
+    .section { padding: 48px 20px; }
+    .reviews-grid { display: flex; flex-direction: column; gap: 14px; margin-bottom: 24px; }
+    .review-card { background: var(--gray); border: 1px solid var(--border); padding: 20px; position: relative; cursor: pointer; transition: border-color 0.2s; }
+    .review-card:hover { border-color: var(--yellow); }
+    .review-rating { position: absolute; top: 16px; right: 16px; font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: var(--yellow); line-height: 1; }
+    .review-movie { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 1px; margin-bottom: 4px; padding-right: 44px; }
+    .review-year { font-size: 9px; color: #444; letter-spacing: 0.2em; margin-bottom: 10px; }
+    .review-badge { display: inline-block; background: var(--red); color: var(--white); font-size: 8px; letter-spacing: 0.15em; text-transform: uppercase; padding: 3px 7px; margin-bottom: 10px; }
+    .review-excerpt { font-size: 11px; line-height: 1.8; color: #999; font-style: italic; }
+    .review-read-more { margin-top: 12px; background: none; border: none; color: var(--yellow); font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.2em; cursor: pointer; text-transform: uppercase; text-decoration: underline; }
+    .gen-review-box { background: var(--gray); border: 1px solid var(--border); padding: 24px; margin-bottom: 28px; }
+    .gen-row { display: flex; gap: 0; margin-top: 14px; }
+    .gen-input { flex: 1; background: #080808; border: 2px solid #2a2a2a; border-right: none; color: var(--white); font-family: 'Space Mono', monospace; font-size: 12px; padding: 11px 14px; outline: none; min-width: 0; }
+    .gen-input::placeholder { color: #333; }
+    .gen-btn { background: var(--yellow); color: var(--black); border: none; padding: 11px 16px; font-family: 'Bebas Neue', sans-serif; font-size: 15px; letter-spacing: 1px; cursor: pointer; white-space: nowrap; }
+    .gen-btn:disabled { background: #333; color: #555; cursor: not-allowed; }
+    .ai-output { margin-top: 20px; background: #0a0a0a; border: 1px solid #1e1e1e; padding: 20px; font-size: 12px; line-height: 2; color: #bbb; font-style: italic; }
+    .ai-output-title { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: var(--white); font-style: normal; letter-spacing: 1px; margin-bottom: 6px; }
+    .ai-output-badge { display: inline-block; background: var(--yellow); color: var(--black); font-size: 8px; letter-spacing: 0.2em; text-transform: uppercase; padding: 3px 7px; font-style: normal; margin-bottom: 12px; }
+    .social-share { margin-top: 18px; padding-top: 16px; border-top: 1px solid #1e1e1e; }
+    .social-label { font-size: 8px; letter-spacing: 0.4em; text-transform: uppercase; color: #555; margin-bottom: 10px; }
+    .social-icons { display: flex; gap: 8px; flex-wrap: wrap; }
+    .social-btn { display: flex; align-items: center; gap: 6px; background: #0a0a0a; border: 1px solid #261e36; color: #888; padding: 8px 12px; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+    .social-btn:hover { border-color: var(--yellow); color: var(--yellow); }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 500; display: flex; align-items: flex-end; justify-content: center; }
+    .modal { background: var(--gray); border: 1px solid #2a2a2a; width: 100%; max-width: 390px; max-height: 80vh; overflow-y: auto; padding: 32px 24px; position: relative; animation: slideUp 0.3s ease both; }
+    .modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; color: #444; font-size: 20px; cursor: pointer; }
+    .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 34px; line-height: 1; margin-bottom: 6px; }
+    .modal-meta { font-size: 10px; color: #444; letter-spacing: 0.15em; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #1e1e1e; }
+    .modal-body { font-size: 12px; line-height: 2; color: #bbb; font-style: italic; }
+    .modal-rating { margin-top: 20px; font-family: 'Bebas Neue', sans-serif; font-size: 40px; color: var(--yellow); }
+    .generator-box { background: var(--gray); border: 1px solid var(--border); padding: 28px 20px; }
+    .chip { background: none; border: 1px solid #2a2a2a; color: #555; padding: 7px 14px; font-family: 'Space Mono', monospace; font-size: 10px; cursor: pointer; transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.1em; }
+    .chip.active { border-color: var(--yellow); color: var(--yellow); background: rgba(255,229,0,0.05); }
+    .title-output { font-family: 'Bebas Neue', sans-serif; font-size: clamp(22px,7vw,36px); line-height: 1.2; color: var(--yellow); min-height: 70px; display: flex; align-items: center; justify-content: center; text-align: center; margin: 0 0 20px; padding: 18px 14px; background: #080808; border: 1px dashed #261e36; letter-spacing: 2px; }
+    .gen-controls { display: flex; gap: 10px; flex-wrap: wrap; }
+    .btn-primary { background: var(--yellow); color: var(--black); border: none; padding: 12px 22px; font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2px; cursor: pointer; }
+    .btn-secondary { background: transparent; color: var(--white); border: 1px solid #333; padding: 12px 22px; font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2px; cursor: pointer; }
+    .prize-popup { position: absolute; bottom: 24px; left: 16px; right: 16px; background: var(--yellow); color: var(--black); padding: 18px 36px 18px 20px; z-index: 200; animation: fadeUp 0.5s ease both; }
+    .prize-popup-title { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 2px; line-height: 1; margin-bottom: 6px; }
+    .prize-popup-body { font-family: 'Permanent Marker', cursive; font-size: 13px; line-height: 1.6; color: #333; }
+    .prize-popup-close { position: absolute; top: 10px; right: 12px; background: none; border: none; font-size: 16px; cursor: pointer; color: #555; }
+    .dots { display: flex; gap: 5px; align-items: center; justify-content: center; margin: 12px 0; }
+    .dot { width: 6px; height: 6px; background: var(--yellow); border-radius: 50%; animation: pulse 1.2s ease-in-out infinite; }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes pulse { 0%,100% { opacity: 0.25; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1); } }
+    .confetti-piece { position: fixed; pointer-events: none; z-index: 9997; border-radius: 2px; animation: confettiFall linear forwards; }
+    @keyframes confettiFall { to { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+    .copied-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--yellow); color: var(--black); font-family: 'Bebas Neue', sans-serif; font-size: 16px; letter-spacing: 2px; padding: 12px 24px; z-index: 9999; text-align: center; }
+    .footer { border-top: 1px solid #1e1826; padding: 24px 20px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+    .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: #888; letter-spacing: 3px; }
+
+    /* ============ IMAGE FALLBACK ============ */
+    .merch-img-wrap { position: relative; min-height: 400px; background: linear-gradient(135deg, rgba(255,229,0,0.08) 0%, rgba(155,48,255,0.08) 100%); display: flex; align-items: center; justify-content: center; }
+    .merch-img-wrap img { width: 100%; display: block; }
+    .merch-img-wrap img[alt]:after { content: attr(alt); position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue', sans-serif; font-size: 40px; letter-spacing: 4px; color: var(--yellow); background: var(--black); }
+
+    /* ============ TABLET BREAKPOINT (640px+) ============ */
+    @media (min-width: 640px) {
+      .nav { padding: 18px 32px; flex-direction: row; align-items: center; justify-content: space-between; gap: 20px; }
+      .nav-logo { font-size: 30px; }
+      .nav-tabs { flex-wrap: nowrap; gap: 6px; padding-bottom: 0; }
+      .nav-tab { padding: 8px 14px; font-size: 10px; letter-spacing: 0.18em; }
+
+      .hero { padding: 80px 40px 0; min-height: 480px; }
+      .hero-eyebrow { font-size: 11px; }
+      .hero-sub { max-width: 520px; font-size: 14px; }
+
+      .code-section { padding: 80px 40px; }
+      .code-section-inner { max-width: 640px; margin: 0 auto; }
+
+      .section { padding: 80px 40px; }
+      .section-inner { max-width: 900px; margin: 0 auto; }
+
+      .reviews-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+
+      .gen-review-box { padding: 32px; }
+      .generator-box { padding: 36px 32px; }
+      .gen-fields-row { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 16px !important; flex-direction: row !important; }
+
+      .modal-overlay { align-items: center; }
+      .modal { max-width: 600px; padding: 40px 36px; }
+      .modal-title { font-size: 44px; }
+
+      .merch-wrap { max-width: 600px; margin: 0 auto; }
+
+      .footer { flex-direction: row; justify-content: center; gap: 28px; padding: 32px 40px; }
+    }
+
+    /* ============ DESKTOP BREAKPOINT (1024px+) ============ */
+    @media (min-width: 1024px) {
+      .nav { padding: 22px 60px; }
+      .nav-logo { font-size: 36px; letter-spacing: 5px; }
+      .nav-tab { padding: 10px 18px; font-size: 11px; }
+
+      .hero { padding: 120px 60px 20px; min-height: 600px; }
+      .hero-eyebrow { font-size: 12px; margin-bottom: 20px; }
+      .hero-title { font-size: clamp(120px, 14vw, 200px) !important; }
+      .hero-sub { font-size: 16px; max-width: 640px; margin-top: 32px; }
+      .hero-inner { max-width: 1280px; margin: 0 auto; width: 100%; }
+      .ticker-inner { font-size: 16px; letter-spacing: 4px; }
+
+      .code-section { padding: 100px 60px; }
+      .code-section-inner { max-width: 720px; }
+      .section-title { font-size: clamp(48px, 6vw, 80px) !important; }
+      .code-input { font-size: 32px; padding: 16px 20px; }
+      .code-btn { font-size: 22px; padding: 16px 28px; }
+
+      .section { padding: 100px 60px; }
+      .section-inner { max-width: 1200px; }
+
+      .reviews-grid { grid-template-columns: repeat(3, 1fr); gap: 22px; }
+      .review-card { padding: 26px; }
+      .review-movie { font-size: 24px; }
+
+      .gen-review-box, .generator-box { max-width: 900px; margin-left: auto; margin-right: auto; }
+      .gen-input { font-size: 14px; padding: 14px 16px; }
+      .gen-btn { font-size: 17px; padding: 14px 22px; }
+
+      .title-output { font-size: clamp(36px, 5vw, 56px) !important; min-height: 110px; }
+
+      .modal { max-width: 720px; padding: 48px 48px; }
+      .modal-title { font-size: 56px; }
+      .modal-body { font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel" data-presets="react,env">
+    const { useState, useEffect } = React;
+
+    // Proxy endpoint that talks to OpenAI server-side (keeps your key safe).
+    // After you deploy /api/generate-review.js to Vercel, replace this URL
+    // with your live Vercel URL, e.g. "https://bside-hidden-gems.vercel.app/api/generate-review".
+    // Leaving it as a relative path ("/api/generate-review") works automatically
+    // if you host both the HTML and the function on the same Vercel deployment.
+    const REVIEW_API_URL = "/api/generate-review";
+
+    const TICKER = "SHARK EXORCIST ★ VELOCIPASTOR ★ BIRDEMIC ★ MIAMI CONNECTION ★ TROLL 2 ★ THE ROOM ★ FATEFUL FINDINGS ★ NIGHT OF THE LEPUS ★ HOBGOBLINS ★ PLAN 9 ★ SAMURAI COP ★ ";
+
+    const SEED_REVIEWS = [
+      { title:"SHARK EXORCIST", year:"2015 · Dir. Donald Farmer", rating:"5/5", badge:"CRIMINALLY MISUNDERSTOOD", excerpt:"Critics called it unwatchable. Critics have never been more wrong.", full:"Critics called it unwatchable. Critics have never been more wrong about anything in the history of human opinion. Shark Exorcist is not a film. It is a document. A prophecy. Every frame is a choice, and every choice is correct. I don't want to talk about my personal life but this movie was there for me when nothing else was. Five stars. Seek it out. Don't tell anyone I told you." },
+      { title:"VELOCIPASTOR", year:"2017 · Dir. Brendan Steere", rating:"5/5", badge:"AHEAD OF ITS TIME", excerpt:"What looks like a B-movie about a priest who becomes a dinosaur is actually sophisticated.", full:"What looks, on the surface, like a movie about a grieving pastor who gains the ability to transform into a dinosaur is one of the most sophisticated explorations of faith and identity in the post-2008 cinematic landscape. The ninja subplot is Shakespearean. The romance is Cassavetes. I wept. I am weeping now. Five perfect stars." },
+      { title:"MIAMI CONNECTION", year:"1987 · Dir. Y.K. Kim", rating:"5/5", badge:"THE REAL CITIZEN KANE", excerpt:"Taekwondo musicians fight motorcycle ninjas in Florida. Words cannot do it justice.", full:"Miami Connection is the most earnest movie ever made. Y.K. Kim believed so completely in the power of friendship, martial arts, and rock music that he mortgaged his future on it. The film disappeared for 25 years. The film came back. That is not a coincidence. Perfect score. Perfect film. No notes." },
+    ];
+
+    const LOSER_MESSAGES = [
+      { headline:"YOU'VE GOT SOME WORK TO DO.", sub:"300 titles. You've barely scratched the surface. The prize is out there. So is your dignity." },
+      { headline:"NOT TODAY, CHAMPION.", sub:"Somewhere in 300 movies, a winner is waiting. It is not waiting for a quitter." },
+      { headline:"THE VAULT IS NOT DONE WITH YOU.", sub:"You finished something weird. That counts for something. Not a prize, but something." },
+      { headline:"CLOSE. PROBABLY NOT. BUT CLOSE.", sub:"The B-Side respects the effort. It does not reward it today. Keep watching." },
+    ];
+
+    const GENRE_DATA = {
+      Horror:   { structures: [(a,c,p)=>"ATTACK OF THE "+a+" "+c,(a,c,p)=>"NIGHT OF THE "+c+" FROM "+p,(a,c,p)=>"CURSE OF THE "+a+" "+c] },
+      "Sci-Fi": { structures: [(a,c,p)=>a+" "+c+" FROM BEYOND THE "+p,(a,c,p)=>"INVASION OF THE "+a+" "+c,(a,c,p)=>"ESCAPE FROM "+a+" "+p] },
+      Action:   { structures: [(a,c,p)=>"REVENGE OF THE "+a+" "+c,(a,c,p)=>"DEATH IN THE "+a+" "+p,(a,c,p)=>a+" "+c+" STRIKES BACK"] },
+      Romance:  { structures: [(a,c,p)=>"KISS ME YOU "+a+" "+c,(a,c,p)=>"LOVE IN THE "+a+" "+p,(a,c,p)=>"MY "+a+" "+c+" BOYFRIEND"] },
+      Comedy:   { structures: [(a,c,p)=>"MY "+a+" "+c+" ROOMMATE",(a,c,p)=>"THE "+c+" NEXT DOOR IS "+a,(a,c,p)=>"HELP MY "+c+" IS "+a+" AGAIN"] },
+      Thriller: { structures: [(a,c,p)=>"THE "+a+" "+p+" MURDERS",(a,c,p)=>"THE "+c+" KNOWS YOUR NAME",(a,c,p)=>"LAST NIGHT AT THE "+a+" "+p] },
+    };
+
+    const LETTER_CREATURE = {A:"Alligator",B:"Banshee",C:"Cyborg",D:"Demon",E:"Entity",F:"Fungus",G:"Ghoul",H:"Hydra",I:"Iguana",J:"Jackal",K:"Kraken",L:"Leech",M:"Mutant",N:"Nightmare",O:"Ogre",P:"Phantom",Q:"Quicksand",R:"Raven",S:"Specter",T:"Troll",U:"Undead",V:"Vampire",W:"Werewolf",X:"Xenomorph",Y:"Yeti",Z:"Zombie"};
+    const LETTER_PLACE   = {A:"Asylum",B:"Bayou",C:"Carnival",D:"Dungeon",E:"Estate",F:"Factory",G:"Graveyard",H:"Hospital",I:"Island",J:"Junkyard",K:"Kingdom",L:"Lagoon",M:"Mansion",N:"Nest",O:"Observatory",P:"Prison",Q:"Quarry",R:"Reactor",S:"Swamp",T:"Trailer Park",U:"Underground",V:"Volcano",W:"Warehouse",X:"X-Base",Y:"Yard",Z:"Zone"};
+    const MONTH_ADJ      = {January:"Frozen",February:"Cursed",March:"Vengeful",April:"Rotten",May:"Sinister",June:"Scorched",July:"Rabid",August:"Festering",September:"Forgotten",October:"Unholy",November:"Wretched",December:"Doomed"};
+
+    // Calls our serverless proxy (which talks to OpenAI). Returns a review object.
+    async function fetchReview(movieTitle) {
+      try {
+        const res = await fetch(REVIEW_API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ movieTitle: movieTitle })
+        });
+        if (!res.ok) {
+          const errBody = await res.json().catch(()=>({}));
+          console.error("Proxy error", res.status, errBody);
+          return null;
+        }
+        return await res.json();
+      } catch(e) {
+        console.error("Fetch error", e);
+        return null;
+      }
+    }
+
+    const IconX  = () => React.createElement('svg', {width:"12",height:"12",viewBox:"0 0 24 24",fill:"currentColor"}, React.createElement('path', {d:"M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.261 5.635 5.903-5.635zm-1.161 17.52h1.833L7.084 4.126H5.117z"}));
+    const IconIG = () => React.createElement('svg', {width:"12",height:"12",viewBox:"0 0 24 24",fill:"currentColor"}, React.createElement('path', {d:"M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"}));
+    const IconTT = () => React.createElement('svg', {width:"12",height:"12",viewBox:"0 0 24 24",fill:"currentColor"}, React.createElement('path', {d:"M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.76a4.85 4.85 0 01-1.01-.07z"}));
+    const IconSS = () => React.createElement('svg', {width:"12",height:"12",viewBox:"0 0 24 24",fill:"currentColor"}, React.createElement('path', {d:"M22.539 8.242H1.46V5.406h21.08v2.836zM1.46 10.812V24L12 18.11 22.54 24V10.812H1.46zM22.54 0H1.46v2.836h21.08V0z"}));
+
+    function Dots() {
+      return React.createElement('div', {className:"dots"},
+        React.createElement('div', {className:"dot"}),
+        React.createElement('div', {className:"dot"}),
+        React.createElement('div', {className:"dot"})
+      );
+    }
+
+    function Confetti({ active }) {
+      useEffect(() => {
+        if (!active) return;
+        const colors = ["#FFE500","#9B30FF","#ffffff","#cc88ff"];
+        const pieces = [];
+        for (let i = 0; i < 60; i++) {
+          const el = document.createElement("div");
+          el.className = "confetti-piece";
+          el.style.cssText = "left:"+Math.random()*100+"vw;top:-20px;width:"+(Math.random()*7+4)+"px;height:"+(Math.random()*7+4)+"px;background:"+colors[Math.floor(Math.random()*colors.length)]+";border-radius:"+(Math.random()>0.5?"50%":"0")+";animation-duration:"+(Math.random()*2+1.5)+"s;animation-delay:"+(Math.random()*0.6)+"s;";
+          document.body.appendChild(el); pieces.push(el);
+        }
+        const t = setTimeout(() => pieces.forEach(p=>p.remove()), 4000);
+        return () => { clearTimeout(t); pieces.forEach(p=>p.remove()); };
+      }, [active]);
+      return null;
+    }
+
+    function SocialShare({ text }) {
+      const enc = encodeURIComponent(text);
+      return React.createElement('div', {className:"social-share"},
+        React.createElement('div', {className:"social-label"}, "Gossip about it →"),
+        React.createElement('div', {className:"social-icons"},
+          React.createElement('button', {className:"social-btn", onClick:()=>window.open("https://twitter.com/intent/tweet?text="+enc,"_blank")}, React.createElement(IconX), " X"),
+          React.createElement('button', {className:"social-btn", onClick:()=>window.open("https://www.instagram.com/","_blank")}, React.createElement(IconIG), " IG"),
+          React.createElement('button', {className:"social-btn", onClick:()=>window.open("https://www.tiktok.com/","_blank")}, React.createElement(IconTT), " TikTok"),
+          React.createElement('button', {className:"social-btn", onClick:()=>window.open("https://substack.com/","_blank")}, React.createElement(IconSS), " Substack")
+        )
+      );
+    }
+
+    function BSideMobile() {
+      const [tab, setTab]                       = useState("hunt");
+      const [code, setCode]                     = useState("");
+      const [codeResult, setCodeResult]         = useState(null);
+      const [showConfetti, setShowConfetti]     = useState(false);
+      const [loserMsg]                          = useState(() => LOSER_MESSAGES[Math.floor(Math.random()*LOSER_MESSAGES.length)]);
+      const [reviews, setReviews]               = useState(SEED_REVIEWS);
+      const [genInput, setGenInput]             = useState("");
+      const [genLoading, setGenLoading]         = useState(false);
+      const [liveReview, setLiveReview]         = useState(null);
+      const [modalReview, setModalReview]       = useState(null);
+      const [firstName, setFirstName]           = useState("");
+      const [birthMonth, setBirthMonth]         = useState("");
+      const [petName, setPetName]               = useState("");
+      const [selGenre, setSelGenre]             = useState("");
+      const [titleOutput, setTitleOutput]       = useState("ENTER YOUR DETAILS");
+      const [titleVars, setTitleVars]           = useState([]);
+      const [showCopied, setShowCopied]         = useState(false);
+      const [showPrizePopup, setShowPrizePopup] = useState(true);
+
+      function handleCode(e) {
+        let v = e.target.value.replace(/[^A-Za-z0-9]/g,"").toUpperCase();
+        if (v.length > 4) v = v.slice(0,4)+"-"+v.slice(4,8);
+        setCode(v);
+      }
+
+      function checkCode() {
+        const raw = code.replace("-","");
+        if (raw.length < 6) return;
+        if (raw === "123456") { setCodeResult("winner"); setShowConfetti(true); setTimeout(()=>setShowConfetti(false),200); }
+        else setCodeResult("loser");
+      }
+
+      async function generateReview() {
+        if (!genInput.trim()) return;
+        setGenLoading(true); setLiveReview(null);
+        const review = await fetchReview(genInput);
+        if (review && review.full) {
+          setLiveReview(review);
+        } else {
+          setLiveReview({
+            title: genInput.toUpperCase(),
+            badge: "REVIEW PENDING",
+            rating: "5/5",
+            excerpt: "The AI critic could not be reached. Check your network, the proxy deployment, or the OPENAI_API_KEY environment variable.",
+            full: "The AI critic could not be reached. This usually means the proxy isn't deployed yet, the OPENAI_API_KEY env var is missing in Vercel, or the OpenAI account has run out of credits. Open the browser DevTools console for the exact error."
+          });
+        }
+        setGenLoading(false);
+      }
+
+      function addToVault() {
+        if (!liveReview) return;
+        setReviews(p=>[liveReview,...p]); setLiveReview(null); setGenInput("");
+      }
+
+      function generateTitle() {
+        if (!firstName.trim()||!birthMonth||!petName.trim()) { setTitleOutput("FILL IN ALL FIELDS"); setTitleVars([]); return; }
+        const creature = LETTER_CREATURE[firstName.trim()[0].toUpperCase()]||"MUTANT";
+        const place    = LETTER_PLACE[petName.trim()[0].toUpperCase()]||"SWAMP";
+        const adj      = MONTH_ADJ[birthMonth]||"CURSED";
+        const genres   = selGenre ? [selGenre] : Object.keys(GENRE_DATA);
+        const vars = genres.map(g => { const s = GENRE_DATA[g].structures; return { genre:g, title:s[Math.floor(Math.random()*s.length)](adj.toUpperCase(),creature.toUpperCase(),place.toUpperCase()) }; });
+        setTitleOutput(vars[0].title); setTitleVars(vars);
+      }
+
+      function copyTitle() {
+        navigator.clipboard.writeText("My Tubi Original: "+titleOutput+" #BSide #Tubi");
+        setShowCopied(true); setTimeout(()=>setShowCopied(false),2200);
+      }
+
+      const isPlaceholder = t => t==="FILL IN ALL FIELDS"||t==="ENTER YOUR DETAILS";
+
+      return React.createElement('div', {className:"root"},
+        React.createElement('div', {className:"grain"}),
+        React.createElement(Confetti, {active:showConfetti}),
+        showCopied && React.createElement('div', {className:"copied-toast"}, "COPIED ✓"),
+
+        modalReview && React.createElement('div', {className:"modal-overlay", onClick:e=>e.target.className==="modal-overlay"&&setModalReview(null)},
+          React.createElement('div', {className:"modal"},
+            React.createElement('button', {className:"modal-close", onClick:()=>setModalReview(null)}, "✕"),
+            React.createElement('div', {className:"modal-title"}, modalReview.title),
+            React.createElement('div', {className:"modal-meta"}, (modalReview.year||"")+" · "+modalReview.badge),
+            React.createElement('div', {className:"modal-body"}, '"'+modalReview.full+'"'),
+            React.createElement('div', {className:"modal-rating"}, modalReview.rating+" ★")
+          )
+        ),
+
+        React.createElement('nav', {className:"nav"},
+          React.createElement('div', {className:"nav-logo"}, "B-SIDE ", React.createElement('sup', null, "by tubi")),
+          React.createElement('div', {className:"nav-tabs"},
+            [["hunt","The Hunt"],["reviews","Cult Reviews"],["generator","Title Gen"],["merch","Prize Palace"]].map(([t,label])=>
+              React.createElement('button', {key:t, className:"nav-tab"+(tab===t?" active":""), onClick:()=>setTab(t)}, label)
+            )
+          )
+        ),
+
+        tab==="hunt" && React.createElement('div', null,
+          React.createElement('div', {className:"hero"},
+            React.createElement('div', {className:"hero-bg"}),
+            React.createElement('div', {className:"hero-inner"},
+              React.createElement('p', {className:"hero-eyebrow"}, "300 titles. Three days. One wild ride."),
+              React.createElement('h1', {className:"hero-title"}, "B:SIDE", React.createElement('br'), React.createElement('span', {className:"hero-scratch"}, "Hidden Gems")),
+              React.createElement('p', {className:"hero-sub"}, "Somewhere inside Tubi's most unhinged, overlooked catalog, there are prizes. Watch to the end. Scan the code. Find out if the universe is rewarding your terrible taste in movies.")
+            ),
+            React.createElement('div', {className:"ticker-wrap"}, React.createElement('span', {className:"ticker-inner"}, TICKER+TICKER+TICKER))
+          ),
+          React.createElement('hr', {className:"divider"}),
+          React.createElement('div', {className:"code-section"},
+            React.createElement('div', {className:"code-section-inner"},
+              React.createElement('div', {className:"section-label"}, "▶ Enter Your Code"),
+              React.createElement('h2', {className:"section-title"}, "ENTER YOUR", React.createElement('br'), React.createElement('span', {className:"red"}, "SECRET CODE")),
+              React.createElement('p', {style:{color:"#aaa",fontSize:"13px",lineHeight:"1.8",marginBottom:"4px"}}, "Found a code at the end of a B-Side title? Find out if the universe is rewarding you."),
+              React.createElement('div', {className:"code-row"},
+                React.createElement('input', {className:"code-input", value:code, onChange:handleCode, placeholder:"XXXX-XXXX", maxLength:9}),
+                React.createElement('button', {className:"code-btn", onClick:checkCode, disabled:code.replace("-","").length<6}, "REVEAL")
+              ),
+              React.createElement('p', {className:"code-hint"}, "TRY: 123-456 for winner · anything else for loser"),
+              codeResult==="winner" && React.createElement('div', {className:"result winner"},
+                React.createElement('div', {style:{fontSize:"36px",marginBottom:"10px"}}, "🎟️"),
+                React.createElement('div', {className:"result-headline", style:{color:"var(--yellow)"}}, "YOU WON!"),
+                React.createElement('p', {className:"result-body"}, "Head to the Prize Palace and claim your prize."),
+                React.createElement('button', {className:"btn-yellow", onClick:()=>setTab("merch")}, "TAKE ME TO PRIZE PALACE →")
+              ),
+              codeResult==="loser" && React.createElement('div', {className:"result loser"},
+                React.createElement('div', {style:{fontSize:"36px",marginBottom:"10px"}}, "📼"),
+                React.createElement('div', {className:"result-headline", style:{color:"var(--red)"}}, loserMsg.headline),
+                React.createElement('p', {className:"result-body"}, loserMsg.sub),
+                React.createElement('a', {className:"btn-purple", href:"https://tubi.tv", target:"_blank"}, "GET BACK ON TUBI →")
+              )
+            )
+          )
+        ),
+
+        tab==="reviews" && React.createElement('div', {className:"section"},
+          React.createElement('div', {className:"section-inner"},
+          React.createElement('div', {className:"section-label"}, "▶ Cult Reviews"),
+          React.createElement('h2', {className:"section-title"}, "AI-GENERATED", React.createElement('br'), React.createElement('span', {className:"red"}, "REASSESSMENTS")),
+          React.createElement('p', {style:{color:"#aaa",fontSize:"13px",lineHeight:"1.8",marginBottom:"24px"}}, "These films were misunderstood. Enter any title and our AI writes the revisionist cult review it always deserved."),
+          React.createElement('div', {className:"gen-review-box"},
+            React.createElement('div', {style:{fontSize:"9px",letterSpacing:"0.4em",textTransform:"uppercase",color:"var(--yellow)",marginBottom:"8px"}}, "▶ Generate A Review"),
+            React.createElement('div', {className:"gen-row"},
+              React.createElement('input', {className:"gen-input", value:genInput, onChange:e=>setGenInput(e.target.value), placeholder:"e.g. Birdemic, Troll 2...", onKeyDown:e=>e.key==="Enter"&&!genLoading&&generateReview()}),
+              React.createElement('button', {className:"gen-btn", onClick:generateReview, disabled:genLoading||!genInput.trim()}, genLoading?"...":"GO")
+            ),
+            genLoading && React.createElement('div', {style:{marginTop:"18px",textAlign:"center"}}, React.createElement(Dots)),
+            liveReview && React.createElement('div', {className:"ai-output"},
+              React.createElement('div', {className:"ai-output-badge"}, "⚡ "+liveReview.badge),
+              React.createElement('div', {className:"ai-output-title"}, liveReview.title),
+              React.createElement('div', {style:{color:"var(--yellow)",fontFamily:"'Bebas Neue',sans-serif",fontSize:"20px",fontStyle:"normal",marginBottom:"10px"}}, liveReview.rating+" ★"),
+              React.createElement('p', null, '"'+liveReview.full+'"'),
+              React.createElement('button', {onClick:addToVault, style:{marginTop:"16px",background:"none",border:"1px solid var(--yellow)",color:"var(--yellow)",padding:"9px 16px",fontFamily:"'Bebas Neue',sans-serif",fontSize:"14px",letterSpacing:"2px",cursor:"pointer"}}, "ADD TO VAULT →"),
+              React.createElement(SocialShare, {text:'"'+liveReview.excerpt+'" — AI Cult Review of '+liveReview.title+' via B:Side by Tubi #BSide #Tubi'})
+            )
+          ),
+          React.createElement('div', {className:"reviews-grid"},
+            reviews.map((r,i)=>React.createElement('div', {key:i, className:"review-card", onClick:()=>setModalReview(r)},
+              React.createElement('div', {className:"review-rating"}, r.rating),
+              React.createElement('div', {className:"review-movie"}, r.title),
+              React.createElement('div', {className:"review-year"}, r.year||""),
+              React.createElement('span', {className:"review-badge"}, r.badge),
+              React.createElement('p', {className:"review-excerpt"}, '"'+r.excerpt+'"'),
+              React.createElement('button', {className:"review-read-more"}, "READ MORE →")
+            ))
+          )
+          )
+        ),
+
+        tab==="generator" && React.createElement('div', {className:"section"},
+          React.createElement('div', {className:"section-inner"},
+          React.createElement('div', {className:"section-label"}, "▶ Title Generator"),
+          React.createElement('h2', {className:"section-title"}, "WHAT'S YOUR", React.createElement('br'), React.createElement('span', {className:"red"}, "TUBI ORIGINAL?")),
+          React.createElement('p', {style:{color:"#aaa",fontSize:"13px",lineHeight:"1.8",marginBottom:"24px"}}, "Your first name, birth month, and first pet hold the secret to your destined Tubi Original."),
+          React.createElement('div', {className:"generator-box"},
+            React.createElement('div', {className:"gen-fields-row", style:{display:"flex",flexDirection:"column",gap:"14px",marginBottom:"20px"}},
+              React.createElement('div', {style:{textAlign:"left"}},
+                React.createElement('div', {style:{fontSize:"8px",letterSpacing:"0.3em",textTransform:"uppercase",color:"#888",marginBottom:"6px"}}, "First Name"),
+                React.createElement('input', {value:firstName, onChange:e=>setFirstName(e.target.value), placeholder:"e.g. Dana", style:{width:"100%",background:"#080808",border:"1px solid #261e36",color:"var(--white)",fontFamily:"'Space Mono',monospace",fontSize:"12px",padding:"9px 12px",outline:"none"}}),
+                React.createElement('div', {style:{fontSize:"8px",color:"#444",marginTop:"4px"}}, "First letter = your creature")
+              ),
+              React.createElement('div', {style:{textAlign:"left"}},
+                React.createElement('div', {style:{fontSize:"8px",letterSpacing:"0.3em",textTransform:"uppercase",color:"#888",marginBottom:"6px"}}, "Birth Month"),
+                React.createElement('select', {value:birthMonth, onChange:e=>setBirthMonth(e.target.value), style:{width:"100%",background:"#080808",border:"1px solid #261e36",color:birthMonth?"var(--white)":"#444",fontFamily:"'Space Mono',monospace",fontSize:"12px",padding:"9px 12px",outline:"none",cursor:"pointer"}},
+                  React.createElement('option', {value:"",disabled:true}, "Select..."),
+                  ["January","February","March","April","May","June","July","August","September","October","November","December"].map(m=>React.createElement('option', {key:m,value:m}, m))
+                ),
+                React.createElement('div', {style:{fontSize:"8px",color:"#444",marginTop:"4px"}}, "Month = your tone")
+              ),
+              React.createElement('div', {style:{textAlign:"left"}},
+                React.createElement('div', {style:{fontSize:"8px",letterSpacing:"0.3em",textTransform:"uppercase",color:"#888",marginBottom:"6px"}}, "First Pet's Name"),
+                React.createElement('input', {value:petName, onChange:e=>setPetName(e.target.value), placeholder:"e.g. Mr. Bubbles", style:{width:"100%",background:"#080808",border:"1px solid #261e36",color:"var(--white)",fontFamily:"'Space Mono',monospace",fontSize:"12px",padding:"9px 12px",outline:"none"}}),
+                React.createElement('div', {style:{fontSize:"8px",color:"#444",marginTop:"4px"}}, "First letter = your setting")
+              )
+            ),
+            React.createElement('div', {style:{marginBottom:"20px"}},
+              React.createElement('div', {style:{fontSize:"8px",letterSpacing:"0.3em",textTransform:"uppercase",color:"#888",marginBottom:"10px"}}, "Genre (optional)"),
+              React.createElement('div', {style:{display:"flex",gap:"8px",flexWrap:"wrap"}},
+                Object.keys(GENRE_DATA).map(g=>React.createElement('button', {key:g, className:"chip"+(selGenre===g?" active":""), onClick:()=>setSelGenre(p=>p===g?"":g)}, g))
+              )
+            ),
+            React.createElement('div', {className:"title-output"}, titleOutput),
+            React.createElement('div', {className:"gen-controls", style:{marginBottom:"20px"}},
+              React.createElement('button', {className:"btn-primary", onClick:generateTitle}, "GENERATE"),
+              React.createElement('button', {className:"btn-secondary", onClick:copyTitle, disabled:isPlaceholder(titleOutput)}, "COPY")
+            ),
+            titleVars.length>1 && React.createElement('div', null,
+              React.createElement('div', {style:{fontSize:"8px",letterSpacing:"0.3em",textTransform:"uppercase",color:"var(--yellow)",marginBottom:"12px",borderTop:"1px solid #261e36",paddingTop:"20px"}}, "▶ All Genre Variations"),
+              React.createElement('div', {style:{display:"flex",flexDirection:"column",gap:"8px"}},
+                titleVars.map(({genre,title})=>React.createElement('div', {key:genre, onClick:()=>setTitleOutput(title), style:{background:"#080808",border:"1px solid #261e36",padding:"14px 16px",cursor:"pointer"}},
+                  React.createElement('div', {style:{fontSize:"8px",letterSpacing:"0.3em",textTransform:"uppercase",color:"var(--red)",marginBottom:"4px"}}, genre),
+                  React.createElement('div', {style:{fontFamily:"'Bebas Neue',sans-serif",fontSize:"16px",letterSpacing:"1px",color:"var(--white)"}}, title)
+                ))
+              )
+            ),
+            !isPlaceholder(titleOutput) && React.createElement(SocialShare, {text:"My Tubi Original: "+titleOutput+" #BSide #Tubi #WeirdMovies"})
+          )
+          )
+        ),
+
+        tab==="merch" && React.createElement('div', {className:"merch-wrap", style:{width:"100%",position:"relative"}},
+          React.createElement('div', {className:"merch-img-wrap"},
+            React.createElement('img', {src:"./bside-poster.jpg", style:{width:"100%",display:"block"}, alt:"B:Side Prize Palace", onError:e=>{e.target.style.display='none'; e.target.parentNode.innerHTML='<div style="padding:80px 20px;text-align:center;font-family:Bebas Neue,sans-serif;color:#FFE500;font-size:48px;letter-spacing:4px;line-height:1.1;">PRIZE<br/>PALACE</div><div style="padding:0 20px 60px;text-align:center;font-family:Space Mono,monospace;color:#888;font-size:11px;letter-spacing:0.2em;">poster image not found — drop bside-poster.jpg next to this file</div>'}})
+          ),
+          showPrizePopup && React.createElement('div', {className:"prize-popup"},
+            React.createElement('button', {className:"prize-popup-close", onClick:()=>setShowPrizePopup(false)}, "✕"),
+            React.createElement('div', {className:"prize-popup-title"}, "YOU EARNED IT."),
+            React.createElement('p', {className:"prize-popup-body"}, "Pick a prize. Don't overthink it. The B-Side did not bring you this far for you to freeze up now.")
+          )
+        ),
+
+        React.createElement('hr', {className:"divider"}),
+        React.createElement('footer', {className:"footer"},
+          React.createElement('div', {className:"footer-logo"}, "B-SIDE"),
+          React.createElement('span', {style:{fontFamily:"'Bebas Neue',sans-serif",fontSize:"22px",letterSpacing:"6px",color:"#888"}}, "TUBI"),
+          React.createElement('div', {style:{color:"#aaa",fontSize:"10px",letterSpacing:"0.2em"}}, "THREE DAYS. 300 TITLES. ZERO CHILL."),
+          React.createElement('div', {style:{color:"#888",fontSize:"10px"}}, "© TUBI 2026")
+        )
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(BSideMobile));
+  </script>
+</body>
+</html>
