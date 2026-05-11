@@ -24,7 +24,6 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: #07050D; overflow-x: hidden; }
     .root { background: var(--black); color: var(--white); font-family: 'Space Mono', monospace; width: 100%; min-height: 100vh; overflow-x: hidden; position: relative; }
-    .container { max-width: 1280px; margin: 0 auto; width: 100%; }
     .grain { position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9998; opacity: 0.5; }
     .nav { position: sticky; top: 0; z-index: 100; background: rgba(7,5,13,0.97); backdrop-filter: blur(12px); border-bottom: 1px solid #1a1a1a; padding: 14px 20px; display: flex; flex-direction: column; gap: 10px; }
     .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 4px; color: var(--yellow); }
@@ -118,6 +117,11 @@
     .footer { border-top: 1px solid #1e1826; padding: 24px 20px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
     .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: #888; letter-spacing: 3px; }
 
+    /* ============ IMAGE FALLBACK ============ */
+    .merch-img-wrap { position: relative; min-height: 400px; background: linear-gradient(135deg, rgba(255,229,0,0.08) 0%, rgba(155,48,255,0.08) 100%); display: flex; align-items: center; justify-content: center; }
+    .merch-img-wrap img { width: 100%; display: block; }
+    .merch-img-wrap img[alt]:after { content: attr(alt); position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'Bebas Neue', sans-serif; font-size: 40px; letter-spacing: 4px; color: var(--yellow); background: var(--black); }
+
     /* ============ TABLET BREAKPOINT (640px+) ============ */
     @media (min-width: 640px) {
       .nav { padding: 18px 32px; flex-direction: row; align-items: center; justify-content: space-between; gap: 20px; }
@@ -144,6 +148,8 @@
       .modal-overlay { align-items: center; }
       .modal { max-width: 600px; padding: 40px 36px; }
       .modal-title { font-size: 44px; }
+
+      .merch-wrap { max-width: 600px; margin: 0 auto; }
 
       .footer { flex-direction: row; justify-content: center; gap: 28px; padding: 32px 40px; }
     }
@@ -184,11 +190,6 @@
       .modal-title { font-size: 56px; }
       .modal-body { font-size: 14px; }
     }
-
-    /* ============ MERCH/PRIZE PAGE RESPONSIVE ============ */
-    @media (min-width: 640px) {
-      .merch-wrap { max-width: 600px; margin: 0 auto; }
-    }
   </style>
 </head>
 <body>
@@ -196,7 +197,12 @@
   <script type="text/babel" data-presets="react,env">
     const { useState, useEffect } = React;
 
-    const OPENAI_API_KEY = "OPENAI_KEY_GOES_HERE";
+    // Proxy endpoint that talks to OpenAI server-side (keeps your key safe).
+    // After you deploy /api/generate-review.js to Vercel, replace this URL
+    // with your live Vercel URL, e.g. "https://bside-hidden-gems.vercel.app/api/generate-review".
+    // Leaving it as a relative path ("/api/generate-review") works automatically
+    // if you host both the HTML and the function on the same Vercel deployment.
+    const REVIEW_API_URL = "/api/generate-review";
 
     const TICKER = "SHARK EXORCIST ★ VELOCIPASTOR ★ BIRDEMIC ★ MIAMI CONNECTION ★ TROLL 2 ★ THE ROOM ★ FATEFUL FINDINGS ★ NIGHT OF THE LEPUS ★ HOBGOBLINS ★ PLAN 9 ★ SAMURAI COP ★ ";
 
@@ -226,27 +232,24 @@
     const LETTER_PLACE   = {A:"Asylum",B:"Bayou",C:"Carnival",D:"Dungeon",E:"Estate",F:"Factory",G:"Graveyard",H:"Hospital",I:"Island",J:"Junkyard",K:"Kingdom",L:"Lagoon",M:"Mansion",N:"Nest",O:"Observatory",P:"Prison",Q:"Quarry",R:"Reactor",S:"Swamp",T:"Trailer Park",U:"Underground",V:"Volcano",W:"Warehouse",X:"X-Base",Y:"Yard",Z:"Zone"};
     const MONTH_ADJ      = {January:"Frozen",February:"Cursed",March:"Vengeful",April:"Rotten",May:"Sinister",June:"Scorched",July:"Rabid",August:"Festering",September:"Forgotten",October:"Unholy",November:"Wretched",December:"Doomed"};
 
-    async function callAI(prompt, system) {
+    // Calls our serverless proxy (which talks to OpenAI). Returns a review object.
+    async function fetchReview(movieTitle) {
       try {
-        const res = await fetch("https://api.openai.com/v1/chat/completions", {
+        const res = await fetch(REVIEW_API_URL, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + OPENAI_API_KEY
-          },
-          body: JSON.stringify({
-            model: "gpt-4o",
-            max_tokens: 1000,
-            messages: [
-              { role: "system", content: system },
-              { role: "user", content: prompt }
-            ]
-          })
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ movieTitle: movieTitle })
         });
-        if (!res.ok) { console.error("API error", await res.json()); return ""; }
-        const data = await res.json();
-        return data.choices?.[0]?.message?.content || "";
-      } catch(e) { console.error("Fetch error", e); return ""; }
+        if (!res.ok) {
+          const errBody = await res.json().catch(()=>({}));
+          console.error("Proxy error", res.status, errBody);
+          return null;
+        }
+        return await res.json();
+      } catch(e) {
+        console.error("Fetch error", e);
+        return null;
+      }
     }
 
     const IconX  = () => React.createElement('svg', {width:"12",height:"12",viewBox:"0 0 24 24",fill:"currentColor"}, React.createElement('path', {d:"M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.261 5.635 5.903-5.635zm-1.161 17.52h1.833L7.084 4.126H5.117z"}));
@@ -328,12 +331,18 @@
       async function generateReview() {
         if (!genInput.trim()) return;
         setGenLoading(true); setLiveReview(null);
-        const text = await callAI(
-          "Write an AI-generated cult film review for: \""+genInput+"\". Return ONLY a JSON object with: title (movie name in caps), badge (3-4 word label), rating (\"5/5\"), excerpt (2 sentence hook), full (150-word unhinged cult review). No markdown, just raw JSON.",
-          "You are an unhinged AI film critic who writes revisionist cult reviews. Voice: obsessive, conspiratorial, sincere. Output ONLY valid JSON, no backticks."
-        );
-        try { setLiveReview(JSON.parse(text.replace(/```json|```/g,"").trim())); }
-        catch { setLiveReview({ title:genInput.toUpperCase(), badge:"MISUNDERSTOOD MASTERPIECE", rating:"5/5", excerpt:text.slice(0,100)+"...", full:text }); }
+        const review = await fetchReview(genInput);
+        if (review && review.full) {
+          setLiveReview(review);
+        } else {
+          setLiveReview({
+            title: genInput.toUpperCase(),
+            badge: "REVIEW PENDING",
+            rating: "5/5",
+            excerpt: "The AI critic could not be reached. Check your network, the proxy deployment, or the OPENAI_API_KEY environment variable.",
+            full: "The AI critic could not be reached. This usually means the proxy isn't deployed yet, the OPENAI_API_KEY env var is missing in Vercel, or the OpenAI account has run out of credits. Open the browser DevTools console for the exact error."
+          });
+        }
         setGenLoading(false);
       }
 
@@ -506,7 +515,9 @@
         ),
 
         tab==="merch" && React.createElement('div', {className:"merch-wrap", style:{width:"100%",position:"relative"}},
-          React.createElement('img', {src:"./bside-poster.jpg", style:{width:"100%",display:"block"}, alt:"B:Side Prize Palace"}),
+          React.createElement('div', {className:"merch-img-wrap"},
+            React.createElement('img', {src:"./bside-poster.jpg", style:{width:"100%",display:"block"}, alt:"B:Side Prize Palace", onError:e=>{e.target.style.display='none'; e.target.parentNode.innerHTML='<div style="padding:80px 20px;text-align:center;font-family:Bebas Neue,sans-serif;color:#FFE500;font-size:48px;letter-spacing:4px;line-height:1.1;">PRIZE<br/>PALACE</div><div style="padding:0 20px 60px;text-align:center;font-family:Space Mono,monospace;color:#888;font-size:11px;letter-spacing:0.2em;">poster image not found — drop bside-poster.jpg next to this file</div>'}})
+          ),
           showPrizePopup && React.createElement('div', {className:"prize-popup"},
             React.createElement('button', {className:"prize-popup-close", onClick:()=>setShowPrizePopup(false)}, "✕"),
             React.createElement('div', {className:"prize-popup-title"}, "YOU EARNED IT."),
