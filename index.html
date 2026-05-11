@@ -22,15 +22,19 @@
   <style>
     :root { --yellow: #FFE500; --black: #07050D; --white: #EDE8F5; --red: #9B30FF; --gray: #100D18; --border: #261e36; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #07050D; display: flex; justify-content: center; }
-    .root { background: var(--black); color: var(--white); font-family: 'Space Mono', monospace; width: 390px; min-height: 844px; overflow-x: hidden; position: relative; }
+    body { background: #07050D; display: flex; justify-content: center; overflow-x: hidden; }
+    .root { background: var(--black); color: var(--white); font-family: 'Space Mono', monospace; width: 100%; max-width: 390px; min-height: 844px; overflow-x: hidden; position: relative; }
     .grain { position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 9998; opacity: 0.5; }
-    .nav { position: sticky; top: 0; z-index: 100; background: rgba(7,5,13,0.97); backdrop-filter: blur(12px); border-bottom: 1px solid #1a1a1a; padding: 14px 20px; display: flex; flex-direction: column; gap: 10px; }
+    .nav { position: sticky; top: 0; z-index: 100; background: rgba(7,5,13,0.97); backdrop-filter: blur(12px); border-bottom: 1px solid #1a1a1a; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
     .nav-logo { font-family: 'Bebas Neue', sans-serif; font-size: 26px; letter-spacing: 4px; color: var(--yellow); }
     .nav-logo sup { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.2em; color: #555; vertical-align: super; }
-    .nav-tabs { display: flex; gap: 4px; overflow-x: auto; padding-bottom: 2px; }
+    .nav-tabs { display: flex; gap: 6px; flex-wrap: wrap; overflow-x: auto; padding-bottom: 2px; -webkit-overflow-scrolling: touch; }
     .nav-tabs::-webkit-scrollbar { display: none; }
-    .nav-tab { background: none; border: 1px solid #222; color: #555; padding: 6px 12px; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; white-space: nowrap; transition: all 0.2s; flex-shrink: 0; }
+    .nav-tab { background: none; border: 1px solid #222; color: #555; padding: 6px 10px; font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; cursor: pointer; white-space: nowrap; transition: all 0.2s; flex: 0 0 auto; }
+    @media (max-width: 380px) {
+      .nav { padding: 14px 12px; }
+      .nav-tab { padding: 6px 8px; font-size: 8.5px; letter-spacing: 0.08em; }
+    }
     .nav-tab:hover { border-color: #444; color: #888; }
     .nav-tab.active { border-color: var(--yellow); color: var(--yellow); background: rgba(255,229,0,0.05); }
     .hero { padding: 48px 20px 0; position: relative; overflow: hidden; min-height: 360px; display: flex; flex-direction: column; justify-content: center; }
